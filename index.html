@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>童話奇境 - 100題 MBTI 命運幻鏡測驗</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+TC:wght@400;600;900&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Quicksand', 'Noto Serif TC', serif;
+            background: radial-gradient(circle at center, #1a0f30 0%, #0c051c 100%);
+            overflow-x: hidden;
+        }
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        /* Custom magical glow classes */
+        .magic-glow {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+        .magic-glow-gold {
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.3);
+        }
+        /* Sparkle animation for background */
+        @keyframes drift {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-1000px) rotate(360deg); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(168,85,247,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        /* Scrollbar customization */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0c051c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a1d96;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6d28d9;
+        }
+    </style>
+</head>
+<body class="text-purple-100 min-h-screen relative flex flex-col justify-between">
+
+    <!-- Canvas Background for Particles -->
+    <div id="particle-container" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- Background Ambient Music / Sound Toggle -->
+    <div class="fixed top-4 right-4 z-50 flex items-center gap-3">
+        <button id="sound-btn" onclick="toggleMute()" class="bg-purple-950/80 border border-purple-500/50 p-3 rounded-full hover:bg-purple-900 transition-all duration-300 flex items-center justify-center text-yellow-400 magic-glow">
+            <i data-lucide="volume-2" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center px-4 py-8 z-10 relative">
+        <div class="w-full max-w-4xl">
+
+            <!-- 1. INTRO / START SCREEN -->
+            <div id="intro-screen" class="bg-purple-950/45 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-6 md:p-12 text-center magic-glow relative overflow-hidden transition-all duration-700">
+                <div class="absolute -top-24 -left-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl"></div>
+                
+                <div class="inline-block p-4 bg-purple-900/40 rounded-full border border-yellow-500/30 mb-6 animate-pulse">
+                    <i data-lucide="sparkles" class="w-12 h-12 text-yellow-400"></i>
+                </div>
+
+                <h1 class="font-cinzel text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 tracking-wider mb-4">
+                    童話奇境：命運幻鏡
+                </h1>
+                <p class="text-sm md:text-base text-purple-200 font-semibold mb-8 max-w-xl mx-auto leading-relaxed">
+                    「旅人啊，歡迎來到細語森林。當迷霧散去，你將踏上一場尋找失落真我的魔法冒險。一路上，你的每一次抉擇，都將注入命運幻鏡中，折射出你最真實的靈魂模樣。」
+                </p>
+
+                <!-- Choose Mode Box -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
+                    <!-- Standard Mode (100 Qs) -->
+                    <div id="mode-full" onclick="selectMode('full')" class="group relative cursor-pointer bg-purple-900/30 border-2 border-purple-500/40 rounded-2xl p-6 hover:border-yellow-400 transition-all duration-300 hover:scale-[1.02] text-left">
+                        <div class="absolute top-4 right-4 bg-yellow-500/20 text-yellow-300 text-xs px-2 py-1 rounded-full border border-yellow-500/40">
+                            最精準推薦
+                        </div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-lucide="book-open" class="w-6 h-6 text-yellow-400 group-hover:animate-bounce"></i>
+                            <h3 class="font-bold text-lg text-yellow-200">傳奇史詩冒險 (100題)</h3>
+                        </div>
+                        <p class="text-xs text-purple-300 leading-relaxed">
+                            經歷隨機生成的100道命運試煉，由演算法確保題目絕不單調重疊，解鎖最深層的靈魂魔導書。
+                        </p>
+                    </div>
+
+                    <!-- Short Mode (20 Qs) -->
+                    <div id="mode-short" onclick="selectMode('short')" class="group relative cursor-pointer bg-purple-900/10 border border-purple-500/20 rounded-2xl p-6 hover:border-purple-400 transition-all duration-300 hover:scale-[1.02] text-left opacity-75 hover:opacity-100">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-lucide="zap" class="w-6 h-6 text-pink-400 group-hover:animate-ping"></i>
+                            <h3 class="font-bold text-lg text-pink-200">精靈微光快篩 (20題)</h3>
+                        </div>
+                        <p class="text-xs text-purple-300 leading-relaxed">
+                            抽取關鍵命運交叉點，快速獲知你的基本童話職業原型。每次測驗皆為全新組合！
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="startJourney()" class="bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-600 text-white font-bold py-4 px-12 rounded-full text-lg shadow-lg hover:shadow-yellow-500/20 transition-all duration-300 transform hover:-translate-y-1 magic-glow-gold">
+                    開啟命運之門
+                </button>
+            </div>
+
+            <!-- 2. QUIZ / ADVENTURE INTERFACE -->
+            <div id="quiz-screen" class="hidden bg-purple-950/50 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-6 md:p-10 magic-glow relative">
+                
+                <!-- Chapter Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-purple-500/20 pb-4 mb-6">
+                    <div>
+                        <span id="chapter-badge" class="bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                            第一章：啟程之晨
+                        </span>
+                        <h2 id="chapter-title" class="text-lg md:text-xl font-bold text-white mt-1">微光初綻的旅途起點</h2>
+                    </div>
+                    <div class="text-right flex items-center gap-2 self-end md:self-auto">
+                        <span class="text-xs text-purple-300">靈魂同步進度</span>
+                        <span id="progress-text" class="font-cinzel text-lg font-bold text-yellow-300">0%</span>
+                    </div>
+                </div>
+
+                <!-- Custom Vine Progress Bar -->
+                <div class="w-full h-3 bg-purple-950 border border-purple-500/20 rounded-full mb-8 relative overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 w-0 transition-all duration-300 rounded-full relative">
+                        <!-- Budding Leaf Effect -->
+                        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-yellow-300 rounded-full magic-glow-gold animate-ping"></div>
+                    </div>
+                </div>
+
+                <!-- Scene Narratives Card -->
+                <div id="scene-card" class="bg-purple-900/20 border border-purple-500/15 rounded-2xl p-5 mb-6 text-sm text-purple-200 italic leading-relaxed flex gap-3 items-start">
+                    <i data-lucide="compass" class="w-5 h-5 text-purple-400 shrink-0 mt-0.5"></i>
+                    <p id="scene-description">
+                        當晨光劃破厚重的林冠，一隻長著金角的小鹿突然從灌木叢中躍出，好奇地打量著你這個不速之客...
+                    </p>
+                </div>
+
+                <!-- Question Prompt -->
+                <div class="mb-8">
+                    <span id="question-number" class="text-xs font-bold text-purple-400 tracking-widest block mb-1">PROMPT #1</span>
+                    <h3 id="question-text" class="text-lg md:text-2xl font-black text-white leading-snug">
+                        這時，你會如何與這隻神秘的守護金角鹿展開第一次互動？
+                    </h3>
+                </div>
+
+                <!-- Options -->
+                <div class="space-y-4">
+                    <button id="option-a-btn" onclick="selectOption('A')" class="group w-full text-left bg-purple-900/30 border border-purple-500/20 rounded-2xl p-5 hover:bg-purple-900/50 hover:border-yellow-400/50 transition-all duration-300 transform hover:-translate-y-0.5 flex gap-4 items-center">
+                        <span class="w-10 h-10 shrink-0 bg-purple-950 border border-purple-500/30 rounded-full flex items-center justify-center text-yellow-300 font-cinzel font-bold group-hover:bg-yellow-400 group-hover:text-purple-950 transition-all">A</span>
+                        <p id="option-a-text" class="text-sm md:text-base text-purple-100 group-hover:text-white leading-relaxed">
+                            主動微笑著走向前，試圖用溫柔的聲音和牠打招呼，並邀請附近的旅人一起來看。
+                        </p>
+                    </button>
+
+                    <button id="option-b-btn" onclick="selectOption('B')" class="group w-full text-left bg-purple-900/30 border border-purple-500/20 rounded-2xl p-5 hover:bg-purple-900/50 hover:border-yellow-400/50 transition-all duration-300 transform hover:-translate-y-0.5 flex gap-4 items-center">
+                        <span class="w-10 h-10 shrink-0 bg-purple-950 border border-purple-500/30 rounded-full flex items-center justify-center text-pink-300 font-cinzel font-bold group-hover:bg-pink-400 group-hover:text-purple-950 transition-all">B</span>
+                        <p id="option-b-text" class="text-sm md:text-base text-purple-100 group-hover:text-white leading-relaxed">
+                            靜靜保持原地不動，屏息凝神，獨自享受這段奇妙的緣分，避免驚擾到美麗的生靈。
+                        </p>
+                    </button>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center mt-8 pt-4 border-t border-purple-500/20">
+                    <button id="prev-btn" onclick="previousQuestion()" class="flex items-center gap-2 text-purple-400 hover:text-white transition text-sm font-semibold disabled:opacity-30 disabled:pointer-events-none">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> 上一步
+                    </button>
+                    <span class="text-xs text-purple-400">
+                        目前題數: <strong id="question-index-display" class="text-yellow-300">1</strong> / <span id="total-questions-display">100</span>
+                    </span>
+                    <button id="skip-btn" onclick="cheatComplete()" class="text-xs text-purple-600 hover:text-purple-400 transition italic">
+                        (魔法跳過測試)
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. TRANSITION / CALCULATING SCREEN -->
+            <div id="loading-screen" class="hidden bg-purple-950/60 backdrop-blur-2xl border border-purple-500/30 rounded-3xl p-12 text-center magic-glow">
+                <div class="relative w-32 h-32 mx-auto mb-6">
+                    <div class="absolute inset-0 rounded-full border-4 border-purple-900"></div>
+                    <div class="absolute inset-0 rounded-full border-4 border-yellow-400 border-t-transparent animate-spin"></div>
+                    <div class="absolute inset-2 rounded-full border border-pink-500 border-b-transparent animate-reverse-spin"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-8 h-8 text-yellow-400 animate-pulse"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-2 font-cinzel tracking-wider">正在向命運幻鏡祈禱...</h2>
+                <p id="loading-tip" class="text-sm text-purple-300 animate-pulse">正在調配你的靈魂魔藥...</p>
+            </div>
+
+            <!-- 4. DETAILED RESULT DASHBOARD -->
+            <div id="result-screen" class="hidden bg-purple-950/60 backdrop-blur-3xl border border-purple-500/30 rounded-3xl p-6 md:p-10 magic-glow-gold relative overflow-hidden">
+                
+                <div class="absolute -top-40 -left-40 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+
+                <!-- Result Header -->
+                <div class="text-center mb-8 relative">
+                    <span class="text-xs font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 border border-yellow-500/30 px-4 py-1.5 rounded-full">
+                        幻鏡占卜結果
+                    </span>
+                    <h2 class="text-sm text-purple-300 mt-3 font-semibold">你在奇境中的轉世靈魂身分是：</h2>
+                </div>
+
+                <!-- Hero Section: Archetype Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center border-b border-purple-500/20 pb-8 mb-8">
+                    <!-- Avatar Art Box -->
+                    <div class="lg:col-span-5 flex flex-col items-center">
+                        <div class="relative w-56 h-56 md:w-64 md:h-64 rounded-full p-2 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 magic-glow-gold mb-6">
+                            <div class="w-full h-full bg-purple-950 rounded-full flex flex-col items-center justify-center overflow-hidden relative border-4 border-purple-950">
+                                <!-- Archetype Graphic placeholder SVG -->
+                                <div id="archetype-graphic" class="text-yellow-400 scale-125 mb-2">
+                                    <!-- Dynamic SVG loaded by JS -->
+                                </div>
+                                <span id="archetype-mbti" class="font-cinzel text-4xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">INFJ</span>
+                            </div>
+                        </div>
+                        <h3 id="archetype-title" class="text-2xl md:text-3xl font-black text-yellow-300 tracking-wide text-center">星辰占卜師</h3>
+                        <p id="archetype-tagline" class="text-xs text-purple-300 mt-2 italic text-center">「在黑夜最深處，指引迷途旅人找尋星光」</p>
+                    </div>
+
+                    <!-- Core Description & Traits -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <!-- Summary Intro -->
+                        <div class="bg-purple-900/20 border border-purple-500/20 rounded-2xl p-5">
+                            <h4 class="text-yellow-300 font-bold mb-2 flex items-center gap-2 text-sm">
+                                <i data-lucide="scroll" class="w-4 h-4"></i> 靈魂魔導書
+                            </h4>
+                            <p id="archetype-desc" class="text-sm text-purple-100 leading-relaxed">
+                                你是林間的隱士，也是命運星象的解讀者。你對世界抱著溫柔的同理心，能洞察事物背後的永恆真理。你並不追求世俗的名望，而是默默在陰影中點亮火把，指引命運交織的方向。
+                            </p>
+                        </div>
+
+                        <!-- Mini Stats Grid -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-purple-900/10 border border-purple-500/10 rounded-xl p-4 flex items-center gap-3">
+                                <div class="p-2 bg-yellow-500/10 rounded-lg text-yellow-300">
+                                    <i data-lucide="sparkles" id="magic-item-icon" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] text-purple-400 uppercase tracking-widest font-semibold">專屬魔法器具</span>
+                                    <strong id="magic-relic" class="text-xs md:text-sm text-purple-100">星雲觀測水晶鏡</strong>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-900/10 border border-purple-500/10 rounded-xl p-4 flex items-center gap-3">
+                                <div class="p-2 bg-pink-500/10 rounded-lg text-pink-300">
+                                    <i data-lucide="paw-print" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] text-purple-400 uppercase tracking-widest font-semibold">契約守護神獸</span>
+                                    <strong id="guardian-beast" class="text-xs md:text-sm text-purple-100">幻網靈月貓</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Magical Talents & Dark Magic (Strengths & Weaknesses) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Strengths -->
+                    <div class="bg-emerald-950/30 border border-emerald-500/25 rounded-2xl p-6">
+                        <h4 class="text-emerald-400 font-black mb-4 flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> 核心魔法天賦 (Strengths)
+                        </h4>
+                        <ul id="talent-list" class="space-y-3 text-sm text-emerald-200/90 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-400 mt-0.5">✦</span>
+                                <span><strong>超感知宿命洞察：</strong> 能在繁雜的事物中迅速察覺到隱秘的命運脈絡。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-emerald-400 mt-0.5">✦</span>
+                                <span><strong>靈魂治癒恩賜：</strong> 擁有安撫狂暴野獸與破碎心靈的強大共情力。</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Weaknesses -->
+                    <div class="bg-rose-950/30 border border-rose-500/25 rounded-2xl p-6">
+                        <h4 class="text-rose-400 font-black mb-4 flex items-center gap-2">
+                            <i data-lucide="shield-alert" class="w-5 h-5"></i> 潛在黑魔法詛咒 (Blindspots)
+                        </h4>
+                        <ul id="curse-list" class="space-y-3 text-sm text-rose-200/90 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <span class="text-rose-400 mt-0.5">✦</span>
+                                <span><strong>思慮過度的幽閉牢籠：</strong> 容易陷入無休止的思維死胡同，與現實世界脫節。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-rose-400 mt-0.5">✦</span>
+                                <span><strong>抗拒凡塵的潔癖：</strong> 對於俗世的琐碎規則容易感到疲倦與排斥。</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Magical Attributes Dichotomy Meters (EI, SN, TF, JP) -->
+                <div class="bg-purple-900/15 border border-purple-500/20 rounded-2xl p-6 mb-8">
+                    <h4 class="text-yellow-200 font-bold mb-6 text-center flex items-center justify-center gap-2">
+                        <i data-lucide="sliders" class="w-5 h-5"></i> 靈魂魔力屬性解構
+                    </h4>
+                    
+                    <div class="space-y-6">
+                        <!-- E vs I -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-2">
+                                <span class="text-yellow-300">外在狂歡 (E) <span id="score-e">0%</span></span>
+                                <span class="text-purple-300">能量汲取來源</span>
+                                <span class="text-pink-300"><span id="score-i">0%</span> 孤獨沉思 (I)</span>
+                            </div>
+                            <div class="w-full h-3 bg-purple-950 rounded-full flex overflow-hidden">
+                                <div id="bar-e" class="bg-yellow-400 h-full transition-all duration-1000" style="width: 50%"></div>
+                                <div id="bar-i" class="bg-purple-600 h-full transition-all duration-1000" style="width: 50%"></div>
+                            </div>
+                        </div>
+
+                        <!-- S vs N -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-2">
+                                <span class="text-yellow-300">大地感知 (S) <span id="score-s">0%</span></span>
+                                <span class="text-purple-300">情報與靈感處理</span>
+                                <span class="text-pink-300"><span id="score-n">0%</span> 星空直覺 (N)</span>
+                            </div>
+                            <div class="w-full h-3 bg-purple-950 rounded-full flex overflow-hidden">
+                                <div id="bar-s" class="bg-yellow-400 h-full transition-all duration-1000" style="width: 50%"></div>
+                                <div id="bar-n" class="bg-purple-600 h-full transition-all duration-1000" style="width: 50%"></div>
+                            </div>
+                        </div>
+
+                        <!-- T vs F -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-2">
+                                <span class="text-yellow-300">冰霜理智 (T) <span id="score-t">0%</span></span>
+                                <span class="text-purple-300">命運抉擇法則</span>
+                                <span class="text-pink-300"><span id="score-f">0%</span> 烈焰同理 (F)</span>
+                            </div>
+                            <div class="w-full h-3 bg-purple-950 rounded-full flex overflow-hidden">
+                                <div id="bar-t" class="bg-yellow-400 h-full transition-all duration-1000" style="width: 50%"></div>
+                                <div id="bar-f" class="bg-purple-600 h-full transition-all duration-1000" style="width: 50%"></div>
+                            </div>
+                        </div>
+
+                        <!-- J vs P -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-2">
+                                <span class="text-yellow-300">古老秩序 (J) <span id="score-j">0%</span></span>
+                                <span class="text-purple-300">奇境冒險作風</span>
+                                <span class="text-pink-300"><span id="score-p">0%</span> 精靈隨性 (P)</span>
+                            </div>
+                            <div class="w-full h-3 bg-purple-950 rounded-full flex overflow-hidden">
+                                <div id="bar-j" class="bg-yellow-400 h-full transition-all duration-1000" style="width: 50%"></div>
+                                <div id="bar-p" class="bg-purple-600 h-full transition-all duration-1000" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best Companion & Restart -->
+                <div class="bg-purple-900/10 border border-purple-500/25 rounded-2xl p-6 mb-8 text-center">
+                    <h4 class="text-pink-300 font-bold mb-2 flex items-center justify-center gap-2">
+                        <i data-lucide="heart" class="w-5 h-5 text-pink-400 animate-pulse"></i> 靈魂契合旅伴 (Best Matches)
+                    </h4>
+                    <p class="text-sm text-purple-200 leading-relaxed mb-4">
+                        當你踏上旅程時，與 <strong id="best-match-title" class="text-yellow-300">吟遊詩人 (ENFP)</strong> 攜手同行，將會引發不可思議的元素共鳴，讓冒險旅途倍加精彩！
+                    </p>
+                </div>
+
+                <!-- Footer Operations -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="shareResult()" class="w-full sm:w-auto bg-purple-900 border border-purple-500 hover:bg-purple-800 text-white font-bold py-3.5 px-8 rounded-full flex items-center justify-center gap-2 transition duration-300">
+                        <i data-lucide="share-2" class="w-5 h-5"></i> 傳遞預言 (複製分享連結)
+                    </button>
+                    <button onclick="restartTest()" class="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-pink-500 text-purple-950 font-black py-3.5 px-8 rounded-full flex items-center justify-center gap-2 transition duration-300 hover:scale-105 magic-glow-gold">
+                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i> 重新尋求幻鏡啟示
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-purple-400/60 z-10 relative">
+        <p>© 2026 奇幻命運森林. 本測驗僅供童話探險與自我認知探索使用。</p>
+    </footer>
+
+    <!-- Custom Magical Sound Synthesizer via Web Audio API -->
+    <script>
+        // Web Audio Synthesizer
+        let audioCtx = null;
+        let isMuted = false;
+
+        function playSound(type) {
+            if (isMuted) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                if (type === 'select') {
+                    // Soft fairy chime / bell pluck
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+                    osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1); // A6
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'win') {
+                    // Ascending chord arpeggio
+                    const now = audioCtx.currentTime;
+                    const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    freqs.forEach((freq, idx) => {
+                        let osc = audioCtx.createOscillator();
+                        let gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + (idx * 0.12));
+                        gain.gain.setValueAtTime(0.1, now + (idx * 0.12));
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.12) + 0.6);
+                        osc.start(now + (idx * 0.12));
+                        osc.stop(now + (idx * 0.12) + 0.6);
+                    });
+                } else if (type === 'click') {
+                    // Woodblock / subtle page turn sound
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(330, audioCtx.currentTime); 
+                    osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.08); 
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }
+            } catch (e) {
+                console.log("Audio contexts not supported/allowed in this iframe browser state.");
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('sound-btn');
+            if (isMuted) {
+                btn.innerHTML = '<i data-lucide="volume-x" class="w-5 h-5 text-gray-400"></i>';
+                btn.classList.remove('text-yellow-400');
+                btn.classList.add('text-gray-400');
+            } else {
+                btn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5 text-yellow-400"></i>';
+                btn.classList.remove('text-gray-400');
+                btn.classList.add('text-yellow-400');
+                playSound('click');
+            }
+            lucide.createIcons();
+        }
+    </script>
+
+    <!-- App Logic & Questions Data -->
+    <script>
+        // State variables
+        let selectedMode = 'full'; // 'full' (100 Qs) or 'short' (20 Qs)
+        let activeQuestions = [];
+        let currentQuestionIdx = 0;
+        let answers = []; // stores 'A' or 'B' for each question index
+
+        // Generating Background Sparkle Effects
+        function spawnSparkles() {
+            const container = document.getElementById('particle-container');
+            const particleCount = 40;
+            for (let i = 0; i < particleCount; i++) {
+                createParticle(container);
+            }
+        }
+
+        function createParticle(container) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 5 + 2;
+            const left = Math.random() * 100;
+            const delay = Math.random() * 15;
+            const duration = Math.random() * 10 + 8;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${left}%`;
+            particle.style.bottom = `-20px`;
+            particle.style.animation = `drift ${duration}s linear ${delay}s infinite`;
+            
+            // Random soft glow colors (purple, blue, gold, pink)
+            const colors = ['rgba(168,85,247,0.7)', 'rgba(236,72,153,0.7)', 'rgba(234,179,8,0.7)', 'rgba(59,130,246,0.7)'];
+            const chosenColor = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.background = `radial-gradient(circle, ${chosenColor} 0%, rgba(255,255,255,0) 70%)`;
+            
+            container.appendChild(particle);
+        }
+
+        // Initialize particles & Icons on load
+        window.addEventListener('DOMContentLoaded', () => {
+            spawnSparkles();
+            lucide.createIcons();
+        });
+
+        // ------------------ HIGHLY DIVERSE MBTI QUESTION POOL (120 Questions) ------------------
+        // To strictly fulfill the <10% similarity constraint, we define 4 arrays of 30 questions.
+        // Each question explores a completely distinct narrative concept (magic academies, dragons, ancient rules, deep caves, festivals).
+        
+        const questionPool = {
+            EI: [
+                { id: "EI_1", dim: "EI", q: "林中空地正舉辦妖精茶會，大家熱情向你招手。你會？", a: "高興地加入她們，和大家圍成一圈唱歌、分享故事", b: "微笑點頭，選擇坐在外圍的樹根下靜靜觀察，自己喝茶" },
+                { id: "EI_2", dim: "EI", q: "遇到一位落難的神祕旅人，你會主動與他搭話嗎？", a: "熱情地走上前詢問是否需要協助，順便打聽外面的世界", b: "在遠處觀察一段時間，等他自己發出求救再慎重考慮靠近" },
+                { id: "EI_3", dim: "EI", q: "夜幕降臨，旅店內正舉辦歡樂的篝火晚會。你會？", a: "在火堆旁大展舞技，與剛認識的旅人們暢飲通宵", b: "在二樓閣樓窗邊看著狂歡的人群，寫著自己的探險日記" },
+                { id: "EI_4", dim: "EI", q: "清晨在林間散步，你更喜歡獨自一人還是有人作伴？", a: "若能和一兩位知己一邊聊天一邊欣賞美景，那就太棒了", b: "我更愛獨自漫步，靜聽晨露滴落與內心深處的聲音" },
+                { id: "EI_5", dim: "EI", q: "遇上罕見的日食奇觀，你最想做的是？", a: "立刻呼喚村莊裡所有人出來，一起在廣場上見證奇蹟的一刻", b: "躲在秘密觀測台，用自製的魔法望遠鏡獨自進行神秘儀式" },
+                { id: "EI_6", dim: "EI", q: "當你在一座精靈樹屋定居時，你希望：", a: "樹屋靠近熱鬧的集市，隨時可以招待訪客與交換情報", b: "樹屋建在隱密的樹冠高處，擁有不受干擾的個人空間" },
+                { id: "EI_7", dim: "EI", q: "幻鏡之湖的守護女巫邀請你留下來同住，你的第一直覺是：", a: "「太棒了，這樣我們可以天天交流法術與生活奇遇！」", b: "「謝謝好意，但我更需要獨自思考和修煉的時間。」" },
+                { id: "EI_8", dim: "EI", q: "進入奢華的國王宴會廳，你最放鬆的時刻是：", a: "在舞池中央與各國使節舉杯交談，暢談冒險趣事", b: "坐在角落的露台上，看著繁星並與一位知己徹夜長談" },
+                { id: "EI_9", dim: "EI", q: "當你被加冕為王，你希望你的統治方式是：", a: "經常召開盛大的公眾聽證會，親自走入民間與百姓熱烈互動", b: "隱身於宮殿深處，依靠賢能的內閣治理，維持皇家神祕感" },
+                { id: "EI_10", dim: "EI", q: "你在一場魔法決鬥中意外獲勝，圍觀人群大聲歡呼，你會：", a: "微笑向大家揮手致意，並邀請大家去酒館喝一杯慶祝", b: "微微鞠躬，快速穿過人群，回到安靜的住所休息" },
+                { id: "EI_11", dim: "EI", q: "小矮人要在森林開闢新市集，邀請你當宣傳員，你會：", a: "興高采烈地到處廣播，主動和各部落的首領攀談推銷", b: "幫他們寫一封優雅的書面邀請函，讓他們自己送出去" },
+                { id: "EI_12", dim: "EI", q: "在冒險小隊中，你通常扮演什麼角色？", a: "負責聯絡、激勵士氣，隨時逗大家開心的發言人", b: "默默觀察形勢、在關鍵時刻提出洞察的智囊" },
+                { id: "EI_13", dim: "EI", q: "一隻受傷的幻獸闖入你的花園，你需要尋求幫忙，你會：", a: "立刻跑到熱鬧的魔法廣場，逢人就問有沒有獸醫線索", b: "先翻閱自己的私人藏書，再寫信給一位可靠的幻獸專家" },
+                { id: "EI_14", dim: "EI", q: "魔法學院要選拔一名去遠方交流的代表，你希望：", a: "去一個熱鬧繁華的大帝國，結識來自世界各地的頂尖巫師", b: "去一個靜謐的高山隱修院，跟隨隱居長老閉關鑽研" },
+                { id: "EI_15", dim: "EI", q: "你在森林中發現了一個神祕的音樂盒，你會：", a: "帶到精靈廣場，和大家一起研究旋律並隨之起舞", b: "帶回秘密樹洞，深夜獨自聆聽它那動人的音符" },
+                { id: "EI_16", dim: "EI", q: "如果你的探險任務需要跟別人合作，你傾向：", a: "組織一個10人以上的大團隊，熱熱鬧鬧、分工合作", b: "與一兩位默契極佳的生死之交同行，保持簡單與專注" },
+                { id: "EI_17", dim: "EI", q: "在前往飛空艇碼頭的漫長路上，你最喜歡做什麼？", a: "和身邊的旅客天南地北地聊天，聽聽他們的奇聞軼事", b: "戴上降噪魔法耳機，看著窗外飛逝的浮雲發呆" },
+                { id: "EI_18", dim: "EI", q: "在妖精婚禮上，有人突然邀請你即興表演一段魔法：", a: "毫不猶豫地站上舞台，用絢麗的火花魔法引來全場尖叫", b: "禮貌謝絕，將表演的機會讓給其他更渴望表現的妖精" },
+                { id: "EI_19", dim: "EI", q: "當你感到魔法能量消耗過度時，你如何恢復魔力？", a: "去熙熙攘攘的魔法夜市吃小吃、感受人間煙火氣", b: "在自己設有結界的房間裡，安靜地睡上一整天" },
+                { id: "EI_20", dim: "EI", q: "精靈女王準備舉辦一個沙龍，你更喜歡：", a: "在人群中穿梭，與不同領域的精靈結交新朋友", b: "與認識多年的精靈長老坐在壁爐旁深度暢談" },
+                { id: "EI_21", dim: "EI", q: "在挑選旅行坐騎時，你的抉擇是？", a: "引人注目、會發出雷鳴般叫聲的風神翼龍", b: "安靜無聲、能隱形於夜色中的幽靈夜貓" },
+                { id: "EI_22", dim: "EI", q: "當有人公開質疑你的魔法觀點時，你會：", a: "立刻大聲地與他進行公開辯論，享受思維碰撞的火花", b: "不予理會，私下或默默用實際的魔法成果來證明自己" },
+                { id: "EI_23", dim: "EI", q: "你被邀請加入一個巫師俱樂部，這裡：", a: "每週都有盛大聚會與群體施法演練", b: "只有一個靜謐的閱讀室，供會員安靜思考" },
+                { id: "EI_24", dim: "EI", q: "面對全新未知的童話城鎮，你第一天會：", a: "立刻走到人潮最洶湧的廣場，和當地人打成一片", b: "先找一家安靜的旅店住下，在黃昏時獨自散步觀察" },
+                { id: "EI_25", dim: "EI", q: "當你成功調配出極珍稀的藥水，你會：", a: "發布魔法傳音，邀請同伴們一起來見證奇蹟結晶", b: "獨自倒出一小杯細細品味，將藥水妥善鎖入私人保險箱" },
+                { id: "EI_26", dim: "EI", q: "你在矮人礦山挖到巨型寶石，你的第一個想法是：", a: "舉辦一場展示會，讓所有人一睹這顆寶石的光芒", b: "默默帶回家，放在床頭作為自己私人賞玩的藏品" },
+                { id: "EI_27", dim: "EI", q: "如果魔法世界爆發流感，你必須隔離在象牙塔：", a: "覺得無比痛苦，每天瘋狂用法術紙鶴給朋友寫信聯絡", b: "覺得這是難得的平靜假期，正好可以安靜讀完一整架古籍" },
+                { id: "EI_28", dim: "EI", q: "被委託擔任皇家慶典的司儀，你會：", a: "深感榮幸，熱情調動全場氣氛，讓慶典高潮迭起", b: "壓力巨大，寧願去當幕後負責寫致詞稿的秘書" },
+                { id: "EI_29", dim: "EI", q: "你對「好朋友」的定義偏向：", a: "人脈廣闊，到處都有可以一塊吃喝玩樂的盟友", b: "知心數人，彼此能進行靈魂深處的共鳴與談話" },
+                { id: "EI_30", dim: "EI", q: "精靈樂團正在招募團員，你希望：", a: "擔任主唱或吹奏最響亮的小號，站在舞台最前方", b: "在後排彈奏大提琴，用低沉的音符默默烘托主旋律" }
+            ],
+            SN: [
+                { id: "SN_1", dim: "SN", q: "你獲得了一張古老的藏寶圖，這張圖最吸引你的是？", a: "地圖上清晰標註的比例尺、地標與實際路徑細節", b: "地圖背後寫著的神祕預言詩以及它象徵的無限可能" },
+                { id: "SN_2", dim: "SN", q: "森林裡的樹果散發出奇異香氣，你會怎麼研究牠？", a: "仔細觀察果皮色澤、用手指觸摸質地並輕咬一口確認", b: "閉上眼深呼吸，感受這顆樹果引發的心靈共鳴與直覺想像" },
+                { id: "SN_3", dim: "SN", q: "你遇見一隻會說話的烏鴉，牠在耳邊低語。你通常會？", a: "關注牠話裡提到的具體位置、時間和寶物名稱", b: "琢磨牠話語中的隱喻，思考這是否是某個更高層次命運的提示" },
+                { id: "SN_4", dim: "SN", q: "當看到一片發光的蘑菇群時，你的腦海中首先浮現的是？", a: "「這種蘑菇叫什麼？有沒有毒？亮度可以維持多久？」", b: "「牠們是不是在深夜為精靈們跳舞時鋪設的發光地毯？」" },
+                { id: "SN_5", dim: "SN", q: "學習一門新的魔法手藝（例如編織魔毯）時，你希望：", a: "師傅能手把手展示具體步驟，並有明確的規格模板供參考", b: "師傅只給予大方向與原理，讓你隨心所欲地發揮創意編織" },
+                { id: "SN_6", dim: "SN", q: "遇見神秘法陣，你首先會注意：", a: "符文的雕刻工藝、使用石材以及地上的物理劃痕", b: "法陣散發的古老能量波動、以及它背後的象徵意涵" },
+                { id: "SN_7", dim: "SN", q: "在湖底發現古老沉船，你最想尋找：", a: "沉甸甸的金幣、保存完好的珠寶和實用的古董兵器", b: "帶有神秘封印的羊皮卷軸、和預言中的命運項鍊" },
+                { id: "SN_8", dim: "SN", q: "城堡的建築風格讓你讚嘆，是因為：", a: "宏偉的巨石結構、精密防水防震設計與防禦巧妙性", b: "它所散發出的歷史滄桑感，以及關於不落之城的古老傳說" },
+                { id: "SN_9", dim: "SN", q: "國王寶庫向你敞開，你挑選冠冕的標準是：", a: "鑲嵌著切工完美、分量十足的極品鑽石與黃金", b: "冠冕雕刻著羽翼鳳凰，帶著能夠感知未來風暴的靈能" },
+                { id: "SN_10", dim: "SN", q: "當長老向你描述「獨角獸」時，你更希望聽到：", a: "牠的身高、體重、壽命、棲息地以及角的功能", b: "牠在遠古神話中的象徵意義、與救世預言的關聯" },
+                { id: "SN_11", dim: "SN", q: "在調配變身藥水時，如果配方少了一味材料，你會：", a: "尋找化學性質、功效最相近的替代材料，嚴格核對成分", b: "憑藉直覺，隨手加入一片落葉或淚水，看看會發生什麼驚奇" },
+                { id: "SN_12", dim: "SN", q: "你更喜歡閱讀哪一類型的魔法書籍？", a: "《實用生活魔法大全：如何修復家具與淨化水源》", b: "《時間與平行宇宙的本質：空間魔法的終極哲學》" },
+                { id: "SN_13", dim: "SN", q: "聽精靈樂團演奏時，你更容易注意到：", a: "樂手的指法、樂器的音準與現場音響的物理效果", b: "樂曲所傳達的哀傷、希望等能激發無限聯想的意境" },
+                { id: "SN_14", dim: "SN", q: "如果讓你設計一間糖果屋，你首先著手的是：", a: "糖果屋的承重結構、防雨材料與可食用的具體甜點規格", b: "糖果屋整體的夢幻意境、帶給孩子們的神秘幸福感" },
+                { id: "SN_15", dim: "SN", q: "當你漫步在清晨的露水森林中，你的感官主要集中在：", a: "泥土與草葉的芬芳、腳踩枯枝的清脆聲、清涼的空氣感", b: "想像這片森林在千年前是什麼模樣，這裡是否曾有古戰場" },
+                { id: "SN_16", dim: "SN", q: "在解鎖神秘石門的密碼時，你的策略是：", a: "仔細檢查石碑上的磨損程度，對比歷代探險者的指紋與痕跡", b: "閉上眼感受石門散發的靈氣，尋找文字密碼中的意象關聯" },
+                { id: "SN_17", dim: "SN", q: "你如何看待童話世界中的「金錢」？", a: "它是實實在在、能買到魔藥和優質裝備的貨幣", b: "它只是一種流通的能量符號，代表著資源與機遇的流轉" },
+                { id: "SN_18", dim: "SN", q: "對於魔法學術界爭論不休的「隱形斗篷原理」，你認為：", a: "應該專注於材質塗層與光學折射的物理研究，給出具體公式", b: "這涉及到空間本質的扭曲，應該探討觀測者與被觀測者的哲學關係" },
+                { id: "SN_19", dim: "SN", q: "當精靈朋友向你訴說他的「宏偉夢想」時，你通常會：", a: "幫他評估這個夢想需要多少預算、幾名人力和實際工期", b: "與他一起描繪夢想實現後的壯麗畫面，並給予無限的情感鼓勵" },
+                { id: "SN_20", dim: "SN", q: "你在市集挑選一件魔法斗篷，你最在意：", a: "保暖防風性、口袋多不多、材質是否耐磨防水", b: "款式是否獨特、能否代表你的個人風格與神祕氣質" },
+                { id: "SN_21", dim: "SN", q: "在迷霧中趕路時，你更信任：", a: "手中的指南針、GPS水晶與實際踏過的地面實感", b: "內心深處的方位感、與直覺指引的那道微弱微光" },
+                { id: "SN_22", dim: "SN", q: "如果世界末日即將來臨，你認為最重要的是：", a: "儲備糧食、水、防禦武器，確保肉體能活下去", b: "保留人類的文明火種、哲學古籍與靈魂的記憶結晶" },
+                { id: "SN_23", dim: "SN", q: "當你描述一個你剛去過的「巨人花園」，你會說：", a: "「那裡有十米高的向日葵，土質是黑色的，種滿了紅玫瑰」", b: "「那是一個時間彷彿靜止的失落樂園，充滿了孤寂與莊嚴」" },
+                { id: "SN_24", dim: "SN", q: "在魔法學校考試時，你更擅長解答：", a: "給出具體魔法配方並計算反應比例的實作題", b: "探討魔法本質、起源與抽象觀念的申論題" },
+                { id: "SN_25", dim: "SN", q: "當你看到一顆落下的枯葉，你容易想到：", a: "秋天到了，氣溫正在下降，森林需要準備過冬了", b: "生命的凋零與重生、時間洪流不可逆的悲壯美感" },
+                { id: "SN_26", dim: "SN", q: "你如何挑選你的魔杖？", a: "親自揮舞、測試重量、重心與手掌的貼合度", b: "閉上眼，等待那根在命運共鳴中能讓心靈一震的魔杖" },
+                { id: "SN_27", dim: "SN", q: "你最討厭別人跟你說話時：", a: "滿口空洞的理想與概念，卻連最基礎的操作細節都說不清楚", b: "只糾結於瑣碎的賬目與細節，完全沒有長遠的格局與想像力" },
+                { id: "SN_28", dim: "SN", q: "在學習草藥學時，你傾向：", a: "建立一本標本冊，把葉片形狀、顏色、氣味詳細記錄下來", b: "理解草藥在生態鏈中的宏觀作用、以及牠們蘊含的元素屬性" },
+                { id: "SN_29", dim: "SN", q: "如果可以擁有一種超能力，你更想選擇：", a: "過目不忘，能瞬間記住眼前看過的所有細節與符文", b: "預知未來，能感應到命運巨輪即將發生的變革" },
+                { id: "SN_30", dim: "SN", q: "當你參觀矮人地宮時，你最驚嘆的是：", a: "巨型齒輪與蒸汽管道之間毫無誤差的機械咬合工藝", b: "整座地宮所展現的，矮人一族對抗大地宿命的悲壯信念" }
+            ],
+            TF: [
+                { id: "TF_1", dim: "TF", q: "守護者雕像出了一道邏輯謎題，答錯會被關進石門。你會？", a: "冷靜分析謎題文字中的邏輯漏洞與字面線索來解謎", b: "感受雕像落寞的神情，猜測建造者背後的初衷與情感來找出答案" },
+                { id: "TF_2", dim: "TF", q: "兩個矮人因為一柄黃金斧頭的歸屬權而大吵大鬧。你的調解方式是？", a: "核對古老律法與斧頭上的鑄造名字，給出絕對公正的判定", b: "聆聽兩人的苦衷，試著找出一個不傷感情且皆大歡喜的和解辦法" },
+                { id: "TF_3", dim: "TF", q: "你需要研發一種新藥水，你的研究風格是？", a: "嚴格控制每毫克的藥粉與煮沸時間，確保結果精準無誤", b: "憑藉直覺與靈性加入淚水和晨露，賦予藥水情感的力量" },
+                { id: "TF_4", dim: "TF", q: "在冒險小隊面臨物資匱乏時，身為領袖你會？", a: "理性按每個人對隊伍的貢獻比例重新分配資源，以求效益最大化", b: "顧及每個人的心理感受，即使犧牲自己一些也要確保大家感到公平溫暖" },
+                { id: "TF_5", dim: "TF", q: "如果你的魔宠犯了錯，打破了村裡的規章，你會？", a: "秉公辦理，讓牠接受該有的懲罰，這樣才能讓牠吸取教訓", b: "護著牠並向村民道歉，畢竟牠不是故意的，牠此時一定很害怕" },
+                { id: "TF_6", dim: "TF", q: "精靈長老邀請你評價他拙劣的詩作，你會：", a: "指出平仄和韻律的不足，給出建設性的實用建議", b: "大力讚美他投入的情感，不想打擊他的創作熱情" },
+                { id: "TF_7", dim: "TF", q: "湖中精靈說你必須犧牲一件心愛之物才能拯救一個陌生精靈：", a: "理性計算得失，衡量陌生精靈對世界未來的價值與自身代價", b: "不忍看著生命逝去，憑藉直覺與澎湃同情心立刻答應" },
+                { id: "TF_8", dim: "TF", q: "法庭上，一位少年因偷竊魔法麵包給生病的母親而被捕。你會：", a: "法律就是法律，必須秉公審判，但可以私下給予金錢救濟", b: "法律應當具有同理心，考慮少年高尚的動機，給予當庭免刑" },
+                { id: "TF_9", dim: "TF", q: "戰勝暗黑魔王後，對於投降的嘍囉，你認為：", a: "必須按戰犯條約給予最冷酷理智的審判，斬草除根防止復燃", b: "給予寬恕與感化，相信愛的溫暖能洗滌他們受創的靈魂" },
+                { id: "TF_10", dim: "TF", q: "當旅伴在哭泣時，你的第一反應通常是：", a: "幫他分析哭泣的原因，並提出解決困難的實際步驟", b: "默默遞上紙巾，給予他一個溫暖的擁抱，陪他一起難過" },
+                { id: "TF_11", dim: "TF", q: "你在評價一個魔法的好壞時，你的標準是：", a: "它是否實用、消耗魔力是否低、戰鬥效率是否高", b: "它是否人道、會不會對森林生態與生命造成傷害" },
+                { id: "TF_12", dim: "TF", q: "如果團隊裡有兩個人發生了嚴重的學術分歧，你會：", a: "讓他們拿出客觀證據與邏輯數據，誰對聽誰的，絕不姑息", b: "私下調解，引導大家尋找共同點，避免傷害了隊伍和氣" },
+                { id: "TF_13", dim: "TF", q: "當你必須解雇一個不稱職的飛空艇領航員，你會：", a: "直接出示他的失職紀錄表，客觀陳述事實並按契約請他離開", b: "委婉約談，肯定他的努力與人格，盡量不讓他感到挫敗" },
+                { id: "TF_14", dim: "TF", q: "你認為童話王國的「正義」應該是：", a: "天平般的絕對公正，王子犯法與庶民同罪，沒有例外", b: "溫暖的港灣，寬恕罪人、給予弱者重建生活的機會" },
+                { id: "TF_15", dim: "TF", q: "在野外求生時，如果必須拋棄部分超重行李，你會：", a: "理性列出每樣物品的實用度，毫不猶豫丟掉價值最低的物品", b: "保留帶有紀念意義的夥伴照片、日記，丟掉一些沉重的生存工具" },
+                { id: "TF_16", dim: "TF", q: "你的好友犯了嚴重錯失，來向你哭訴，你會：", a: "客觀指出他的不對之處，並督促他立刻去向受害者道歉賠償", b: "先站在好友這一邊，安慰他、同情他，一起痛罵不公的規則" },
+                { id: "TF_17", dim: "TF", q: "在挑選冒險導師時，你希望導師是：", a: "博學冷靜、要求嚴格，能指出你所有法術漏洞的嚴師", b: "溫柔和藹、隨時鼓勵你，能看見你靈魂閃光點的心靈導師" },
+                { id: "TF_18", dim: "TF", q: "當你聽到一個殘酷的真相，你會：", a: "長痛不如短痛，理智接受現實，並根據事實調整行動", b: "感到極度難受，寧願相信一個美麗的謊言來維持希望" },
+                { id: "TF_19", dim: "TF", q: "如果有人稱讚你，你更希望聽到哪種讚美？", a: "「你真是我見過最聰明、做事最有效率、邏輯最嚴密的巫師」", b: "「你真是我見過最溫柔、最懂得關心他人、最善良的勇者」" },
+                { id: "TF_20", dim: "TF", q: "當你面對一隻迷失在人間的魔界幼龍，你的決定是：", a: "將牠送交皇家研究院鑑定，確保牠不會對人類社會造成危害", b: "送牠回魔界找媽媽，牠現在一定哭得很傷心、很想家" },
+                { id: "TF_21", dim: "TF", q: "當一個魔法專案失敗時，你首先反思的是：", a: "「哪一個邏輯環節出錯了？我的計算公式是不是不對？」", b: "「我是不是忽視了同伴的想法？大家是不是因此受傷了？」" },
+                { id: "TF_22", dim: "TF", q: "如果國王命令你設計一套「稅收法」，你的設計核心是：", a: "建立嚴密、精確的數學模型，確保國庫收入最優化與稅法公平", b: "關照貧苦農民的底層生活，減免他們的負擔，體現皇家恩澤" },
+                { id: "TF_23", dim: "TF", q: "你更欣賞哪一種類型的小說主角？", a: "智商超群、冷靜佈局，以智謀玩弄敵人於股掌之間的謀略家", b: "心懷天下、為了拯救蒼生與夥伴甘願犧牲自我的溫暖勇者" },
+                { id: "TF_24", dim: "TF", q: "當你跟愛人發生爭執時，你：", a: "一定要把道理說清楚，分清是非對錯，否則問題永遠存在", b: "先退讓一步安撫對方情緒，認為感情的和諧比誰對誰錯重要得多" },
+                { id: "TF_25", dim: "TF", q: "在評定魔法師等級時，你認為應該：", a: "完全看魔法考試分數與戰鬥表現等客觀指標，不徇私情", b: "考慮到每個學員的起點與個人家庭背景，給予溫暖的彈性分數" },
+                { id: "TF_26", dim: "TF", q: "如果你的隊友在戰鬥中拖了後腿，你會：", a: "在戰後會議上客觀指出他的失誤細節，討論如何改進", b: "安撫他自責的情緒，告訴他這沒什麼，大家一起承擔" },
+                { id: "TF_27", dim: "TF", q: "你如何看待童話世界中的「約定」？", a: "它是一份神聖的契約，除非不可抗力，否則必須嚴格執行", b: "它是人與人情感的橋樑，如果情況改變且不傷感情，可以彈性調整" },
+                { id: "TF_28", dim: "TF", q: "當你看到一幅描繪「戰爭悲劇」的畫作：", a: "你開始分析戰爭爆發的底層政治、經濟與資源匱乏因果", b: "你被畫中孤兒落淚的眼神深深刺痛，沉浸在巨大的同理與哀傷中" },
+                { id: "TF_29", dim: "TF", q: "精靈大會上，一個好的提議因為得罪了長老而陷入僵局，你會：", a: "堅持真理與效率，據理力爭，認為不應為了長老面子犧牲大局", b: "尋找一個折衷的溫和說法，給足長老面子，緩解尷尬氣氛" },
+                { id: "TF_30", dim: "TF", q: "你認為一隻優秀的冒險團隊最不可或缺的是：", a: "鋼鐵般的紀律、明確的分工以及高效的執行力", b: "家庭般的溫暖、互相信任的情感紐帶以及包容心" }
+            ],
+            JP: [
+                { id: "JP_1", dim: "JP", q: "踏入森林前，你的行李準備狀態是？", a: "按照清單一項項清點，裝備齊全且分門別類放好", b: "隨意塞了一些覺得有用的魔法粉末，計畫一路上走著瞧" },
+                { id: "JP_2", dim: "JP", q: "看著森林分岔路，你通常會如何選擇前進路線？", a: "拿出指南針與地圖，規劃一條最快到達終點的安全路線", b: "跟著感覺與當時飄來的蒲公英方向前進，享受未知的迷路" },
+                { id: "JP_3", dim: "JP", q: "你被指派在限時內護送一顆精靈蛋，你的做法是？", a: "制定一份每天的護送日程表，每天嚴格走滿十公里", b: "看天氣和心情，有時走快些，累了就在美麗的河畔紮營幾天" },
+                { id: "JP_4", dim: "JP", q: "若發現預定的露營地被沼澤泥怪佔領了，你會？", a: "感到焦慮與煩躁，因為這打亂了你今晚所有的行程規劃", b: "覺得很有趣，正好可以順理成章地在旁邊的古樹上搭建一個樹屋" },
+                { id: "JP_5", dim: "JP", q: "對於你隨身攜帶的「魔法大典」，你喜歡：", a: "按目錄、索引井井有條地整理，所有法術分類清晰", b: "夾滿亂七八糟的草稿、落葉和臨時抄寫的配方，隨手翻閱" },
+                { id: "JP_6", dim: "JP", q: "你要在日落前學會飛天掃帚，你會：", a: "嚴格按照《掃帚飛行安全指南》的分解動作與進度練習", b: "直接跨上去飛，在一次次隨性的摸索與摔倒中尋找感覺" },
+                { id: "JP_7", dim: "JP", q: "在湖畔紮營時，你的營地通常是：", a: "帳篷搭建得非常牢固對稱，柴火整齊碼放，防禦結界拉好", b: "帳篷隨意搭著，睡袋歪向一邊，桌上隨手擺放撿來的彩石" },
+                { id: "JP_8", dim: "JP", q: "面對雲端城堡複雜的皇家規矩與時間表：", a: "感到非常舒適，嚴格遵守作息能讓你的生活無比充實有效率", b: "覺得備受束縛，總是想尋找機會偷偷打破規矩溜出去玩" },
+                { id: "JP_9", dim: "JP", q: "對於建國大業的未來藍圖，你更傾向於：", a: "制定一份詳細的五年建國規劃書，確保帝國步步為營", b: "定下繁榮自由的大方向，讓子民們自由隨性發展，順其自然" },
+                { id: "JP_10", dim: "JP", q: "當你受邀參加一場尋寶比賽，你會：", a: "提前收集所有情報，列出可能埋藏寶物的位置清單，精準排查", b: "漫步在賽場中，一邊欣賞風景一邊憑運氣和臨場靈感尋寶" },
+                { id: "JP_11", dim: "JP", q: "精靈女王在最後一刻突然更改了加冕儀式的流程，你會：", a: "感到十分不適與惱怒，因為你已經為原流程做好了完美準備", b: "毫不在意，認為隨機應變才是魔法的最高境界，欣然接受" },
+                { id: "JP_12", dim: "JP", q: "你的私人樹洞房間，通常的雜亂程度是：", a: "一塵不染，每本書、每顆水晶都擺放在固定的位置", b: "極度混亂，但你卻能在這片「混亂」中精準找到你要的魔杖" },
+                { id: "JP_13", dim: "JP", q: "當你決定去另一個浮空島旅行，你通常：", a: "提前一個月訂好飛空艇票，列出每日必去景點與餐廳清單", b: "只買一張單程票，到了當地再看哪裡好玩就去哪裡" },
+                { id: "JP_14", dim: "JP", q: "在烹飪女巫湯時，你的習慣是：", a: "嚴格遵循祖傳食譜，幾克精靈鹽、幾滴晨露都用天平稱量", b: "隨心所欲地添加食材，一邊燉煮一邊嚐味道，全憑當下靈感" },
+                { id: "JP_15", dim: "JP", q: "當你有一整天的空閒時間，你喜歡：", a: "列出一張清單，把想看的書、想洗的衣服、想修的裝備一件件勾掉", b: "完全不設定目標，睡到自然醒，看看風會把你帶去哪裡" },
+                { id: "JP_16", dim: "JP", q: "面對一項預計耗時一個月的「收集巨龍鱗片」任務，你：", a: "每天定時定量收集3片，確保在第30天不慌不忙地完成", b: "前20天四處遊山玩水，最後5天爆發魔力通宵趕工完成" },
+                { id: "JP_17", dim: "JP", q: "當你打算和精靈朋友們聚會，你最不喜歡：", a: "臨時取消聚會，這會讓你覺得被放鴿子且打亂了整天計劃", b: "提前三個月就定死聚會時間，這會讓你覺得備受行程表的束縛" },
+                { id: "JP_18", dim: "JP", q: "你如何看待魔法學校的「校規」？", a: "它是保護大家安全、維持教學秩序的重要基石，必須嚴守", b: "它只是一些參考建議，在不傷害他人的前提下可以彈性變通" },
+                { id: "JP_19", dim: "JP", q: "在冒險小隊出發前，如果方案還沒百分百定案，你會：", a: "拒絕出發，堅信在沒有萬全之策前出發是極度不負責任的", b: "先出發再說，一路上兵來將擋、水來土掩，隨機應變就好" },
+                { id: "JP_20", dim: "JP", q: "當你做出一項重大決定（例如轉職為戰士或法師），你會：", a: "一旦決定便不再更改，堅定不移地朝著既定目標前行", b: "保持開放態度，隨時準備根據新的冒險經歷推翻之前的決定" },
+                { id: "JP_21", dim: "JP", q: "你的書桌上是否堆滿了未完成的魔法小發明？", a: "很少，你習慣一件事情徹底做完收尾，才開啟下一件", b: "非常多，你總是對新點子充滿熱情，而懶得去完成舊項目的收尾" },
+                { id: "JP_22", dim: "JP", q: "在與惡龍戰鬥時，你更傾向於：", a: "按照戰前制定的 A、B、C 套戰術方案，嚴格執行步驟", b: "觀察惡龍的臨場動作漏洞，隨性揮灑法術進行即興反擊" },
+                { id: "JP_23", dim: "JP", q: "你覺得哪一種狀態更讓你感到踏實？", a: "一切都已經被決定、安排好，未來充滿了可預測的秩序", b: "一切都還懸而未決，未來充滿了無限的可能性與變數" },
+                { id: "JP_24", dim: "JP", q: "魔法圖書館管理員請你幫忙整理雜亂的書架，你的做法是：", a: "按拼音與種類進行最科學的排序編號，貼上醒目的標籤", b: "大致歸類一下，覺得書架看起來自然、隨意、方便拿取就好" },
+                { id: "JP_25", dim: "JP", q: "對於「時間管理」，你的看法是：", a: "時間是寶貴的資源，必須精確到分鐘，不能容許無謂的虛度", b: "時間是流動的溪水，順應內心狀態去生活才是最高的養生之道" },
+                { id: "JP_26", dim: "JP", q: "你被指派去建造一座精靈花園，你會：", a: "先畫好設計圖紙、確認每棵植物的位置與對稱性，然後動工", b: "一邊栽種一邊調整，看哪種花和哪種草擺在一起順眼就種哪" },
+                { id: "JP_27", dim: "JP", q: "當你買了一個複雜的古代魔導玩具，你會：", a: "耐著性子把說明書從頭到尾看一遍，按步驟啟動它", b: "直接動手摸索、亂按按鈕，在實踐中摸索它的玩法" },
+                { id: "JP_28", dim: "JP", q: "如果你要寫一本《探險日誌》，你希望：", a: "按日期、天氣、經緯度與具體事件寫成標準的編年體", b: "寫滿臨場的心情、塗鴉、摘錄的精靈民謠與不規則的感悟" },
+                { id: "JP_29", dim: "JP", q: "當你答應幫矮人挖礦一整天，中途發現更美麗的水晶洞：", a: "強忍住好奇心，先完成答應矮人的工作，改天再去探洞", b: "向矮人告假或直接開溜，迫不及待地衝進水晶洞一探究竟" },
+                { id: "JP_30", dim: "JP", q: "你被封為奇境守護者，你上任後的第一件事是：", a: "修訂並頒布一套全新的守護者守則，明確獎懲標準", b: "巡視四方，多聽聽百姓的聲音，不做任何死板的規章限制" }
+            ]
+        };
+
+        // ------------------ GAME ENGINE LOGIC WITH DYNAMIC SAMPLING ------------------
+
+        // Fisher-Yates Shuffle Algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectMode(mode) {
+            selectedMode = mode;
+            playSound('click');
+            
+            // Toggle active visual states
+            const fullBtn = document.getElementById('mode-full');
+            const shortBtn = document.getElementById('mode-short');
+            
+            if (mode === 'full') {
+                fullBtn.classList.add('border-yellow-400', 'magic-glow');
+                fullBtn.classList.remove('opacity-75');
+                shortBtn.classList.remove('border-purple-400', 'magic-glow');
+                shortBtn.classList.add('opacity-75');
+            } else {
+                shortBtn.classList.add('border-purple-400', 'magic-glow');
+                shortBtn.classList.remove('opacity-75');
+                fullBtn.classList.remove('border-yellow-400', 'magic-glow');
+                fullBtn.classList.add('opacity-75');
+            }
+        }
+
+        function startJourney() {
+            playSound('win');
+            
+            // Generate a fresh, non-overlapping randomized dataset per dimension on every click!
+            const countPerDim = (selectedMode === 'full') ? 25 : 5;
+            
+            // Clone and shuffle each axis separately
+            const shuffledEI = shuffleArray([...questionPool.EI]);
+            const shuffledSN = shuffleArray([...questionPool.SN]);
+            const shuffledTF = shuffleArray([...questionPool.TF]);
+            const shuffledJP = shuffleArray([...questionPool.JP]);
+
+            // Pick slices (no overlaps possible within active set because each axis has exactly 30 unique questions)
+            const pickedEI = shuffledEI.slice(0, countPerDim);
+            const pickedSN = shuffledSN.slice(0, countPerDim);
+            const pickedTF = shuffledTF.slice(0, countPerDim);
+            const pickedJP = shuffledJP.slice(0, countPerDim);
+
+            // Merge and shuffle the complete test run
+            const rawSelection = [...pickedEI, ...pickedSN, ...pickedTF, ...pickedJP];
+            activeQuestions = shuffleArray(rawSelection);
+
+            // Dynamically allocate Chapters (1 to 5) to the newly shuffled deck of questions
+            const itemsPerChapter = activeQuestions.length / 5;
+            activeQuestions.forEach((q, index) => {
+                q.chapter = Math.floor(index / itemsPerChapter) + 1;
+            });
+
+            // Reset game states
+            currentQuestionIdx = 0;
+            answers = new Array(activeQuestions.length).fill(null);
+
+            // Hide Intro, Show Quiz
+            document.getElementById('intro-screen').classList.add('hidden');
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('hidden');
+            
+            updateQuestion();
+        }
+
+        function updateQuestion() {
+            const currentQ = activeQuestions[currentQuestionIdx];
+            
+            // Update Chapter badge and title
+            const chInfo = chaptersInfo.find(c => c.id === currentQ.chapter);
+            document.getElementById('chapter-badge').innerText = chInfo.title;
+            document.getElementById('chapter-title').innerText = chInfo.desc;
+            
+            // Update question content
+            document.getElementById('question-number').innerText = `PROMPT #${currentQuestionIdx + 1}`;
+            document.getElementById('question-text').innerText = currentQ.q;
+            document.getElementById('option-a-text').innerText = currentQ.a;
+            document.getElementById('option-b-text').innerText = currentQ.b;
+            
+            // Dynamic thematic descriptors based on chapter and MBTI axis
+            const dimensionThemes = {
+                "EI": "這涉及到你在奇境冒險中吸取能量與同伴交往的靈魂本能...",
+                "SN": "這測試了你在迷霧森林中，依賴肉體感官細節還是星空直覺的傾向...",
+                "TF": "這將折射出你在冰霜理智與烈焰情感之間，進行命運抉擇的靈魂法規...",
+                "JP": "這反映了你追求古老神聖秩序，還是精靈自由隨性生活的冒險作風..."
+            };
+            
+            document.getElementById('scene-description').innerText = dimensionThemes[currentQ.dim];
+
+            // Progress Update
+            const total = activeQuestions.length;
+            const progressPct = Math.round((currentQuestionIdx / total) * 100);
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+            document.getElementById('progress-text').innerText = `${progressPct}%`;
+            document.getElementById('question-index-display').innerText = currentQuestionIdx + 1;
+            document.getElementById('total-questions-display').innerText = total;
+
+            // Highlight previous answer if exists
+            const optA = document.getElementById('option-a-btn');
+            const optB = document.getElementById('option-b-btn');
+            optA.classList.remove('border-yellow-400', 'bg-purple-900/60');
+            optB.classList.remove('border-yellow-400', 'bg-purple-900/60');
+
+            if (answers[currentQuestionIdx] === 'A') {
+                optA.classList.add('border-yellow-400', 'bg-purple-900/60');
+            } else if (answers[currentQuestionIdx] === 'B') {
+                optB.classList.add('border-yellow-400', 'bg-purple-900/60');
+            }
+
+            // Handle Previous Button State
+            document.getElementById('prev-btn').disabled = (currentQuestionIdx === 0);
+        }
+
+        function selectOption(option) {
+            playSound('select');
+            answers[currentQuestionIdx] = option;
+
+            // Simple visual response
+            const targetBtn = option === 'A' ? document.getElementById('option-a-btn') : document.getElementById('option-b-btn');
+            const otherBtn = option === 'A' ? document.getElementById('option-b-btn') : document.getElementById('option-a-btn');
+            
+            targetBtn.classList.add('border-yellow-400', 'bg-purple-900/60');
+            otherBtn.classList.remove('border-yellow-400', 'bg-purple-900/60');
+
+            // Proceed automatically with a brief delay for aesthetic fluidness
+            setTimeout(() => {
+                if (currentQuestionIdx < activeQuestions.length - 1) {
+                    currentQuestionIdx++;
+                    updateQuestion();
+                } else {
+                    finishJourney();
+                }
+            }, 250);
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIdx > 0) {
+                playSound('click');
+                currentQuestionIdx--;
+                updateQuestion();
+            }
+        }
+
+        // Cheat function for testing/fast access
+        function cheatComplete() {
+            for (let i = 0; i < answers.length; i++) {
+                if (answers[i] === null) {
+                    answers[i] = Math.random() > 0.5 ? 'A' : 'B';
+                }
+            }
+            finishJourney();
+        }
+
+        // ------------------ MBTI CALCULATION ENGINE ------------------
+
+        const mbtiArchetypes = {
+            "INTJ": {
+                title: "奧秘學者 (The Arcane Scholar)",
+                tagline: "「在孤獨的巨塔之上，用真理編織未來的星圖」",
+                desc: "你擁有高聳入雲的心智巨塔。你不隨波逐流，喜歡透過繁複的魔導理論去洞悉世界的運行規律。在你的眼中，沒有無法被邏輯拆解的谜題，你永遠在為最長遠的命運規劃著宏偉的藍圖。",
+                relic: "萬象真理星軌盤",
+                beast: "裂空幽冥隼",
+                itemIcon: "compass",
+                talents: [
+                    "<strong>深邃遠景預言：</strong> 擁有無與倫比的宏觀戰略規劃與未來趨勢預測能力。",
+                    "<strong>奧秘架構解析：</strong> 面對再繁複、混亂的魔法系統，也能瞬間梳理出底層邏輯。"
+                ],
+                curses: [
+                    "<strong>極寒理智屏障：</strong> 容易讓人覺得冷酷、難以接近，忽視了身邊人情感上的求救。",
+                    "<strong>完美主義偏執：</strong> 常常因為計畫不夠精美完美而陷入停滯的思維死胡同。"
+                ],
+                match: "吟遊詩人 (ENFP)",
+                svg: `<svg class="w-24 h-24 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.168.477 4 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4 1.253" /></svg>`
+            },
+            "INTP": {
+                title: "皇家鍊金術士 (The Royal Alchemist)",
+                tagline: "「配方只是點綴，尋求萬物本質的真理才是永恆」",
+                desc: "你是奇境中不眠不休的真理追尋者。比起統治城堡，你更喜歡躲在布滿試管與古籍的地下室。你的好奇心是無底的深淵，對你而言，將截然不同的元素融合、並推導出全新理論是世界上最美妙的事情。",
+                relic: "永恆元素賢者之石",
+                beast: "知慧幽瞳鴞",
+                itemIcon: "flask",
+                talents: [
+                    "<strong>千變鍊金奇想：</strong> 邏輯推理天馬行空，能在極短時間內想到極具創意的非傳統解法。",
+                    "<strong>客觀真理濾鏡：</strong> 絕不被偏見左右，能極度公正客观地剖析複雜難題。"
+                ],
+                curses: [
+                    "<strong>無盡拖延魔咒：</strong> 沉溺於理論架構而遲遲不肯動手將魔藥熬製出來。",
+                    "<strong>社交能量乾涸：</strong> 容易徹底切斷與外界的聯繫，縮進自我思維城堡裡。"
+                ],
+                match: "光明號召者 (ENFJ)",
+                svg: `<svg class="w-24 h-24 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>`
+            },
+            "ENTJ": {
+                title: "帝國開拓者 (The Sovereign Pioneer)",
+                tagline: "「我的劍锋所指，便是帝國疆域的擴張之處」",
+                desc: "你生來就是要站在雲端城堡最頂端俯瞰大地的。你具有鋼鐵般的意志和無與倫比的組織天賦。面對混亂與危機，你絕不退縮，能迅速重整冒險隊伍，帶領所有人突破致命的防禦屏障，建立起不朽的秩序。",
+                relic: "至高主宰審判之劍",
+                beast: "黃金獅鷲獸",
+                itemIcon: "shield",
+                talents: [
+                    "<strong>鐵腕戰術決策：</strong> 擁有驚人的決斷力，在生死关頭能面不改色地做出最利隊伍的布局。",
+                    "<strong>無畏領袖氣場：</strong> 能激發整支隊伍的鬥志，讓原本怯懦的士兵爆發出騎士般的勇氣。"
+                ],
+                curses: [
+                    "<strong>專斷意志暴風：</strong> 容易因為過度追求效率，而無意間踐踏了同伴的情感與自尊。",
+                    "<strong>對軟弱的零容忍：</strong> 很難理解和同理隊友的脆弱，容易顯得嚴苛、不近人情。"
+                ],
+                match: "森林尋夢者 (INFP)",
+                svg: `<svg class="w-24 h-24 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>`
+            },
+            "ENTP": {
+                title: "奇想魔術師 (The Whimsical Trickster)",
+                tagline: "「規則？那不過是留給平庸之人解開的緞帶」",
+                desc: "你是森林中最難以捉摸的一縷清風。你熱愛推翻古老的戒律，在混亂與秩序的邊緣跳舞。你腦海中的創意就像漫天的螢火蟲，多到數不清。對你而言，打破常規、與命運女神鬥智才是最極致的冒險樂趣。",
+                relic: "千面幻魔千面鏡",
+                beast: "九尾幻火狐",
+                itemIcon: "wand",
+                talents: [
+                    "<strong>絕境奇襲逆轉：</strong> 越是在無路可退的危機關頭，越能想到震驚全場的鬼點子逆轉戰局。",
+                    "<strong>思辨思維風暴：</strong> 天生的辯論大師，能輕鬆識破並打破任何古老的心靈幻覺與邏輯鎖。"
+                ],
+                curses: [
+                    "<strong>三分鐘熱度狂熱：</strong> 容易同時開啟十個好玩的魔法項目，卻沒有一個能堅持熬製完成。",
+                    "<strong>惡作劇過度警報：</strong> 為了好玩而故意挑釁古老權威，可能給隊伍帶來不必要的麻煩。"
+                ],
+                match: "溫和林間精靈 (ISFJ)",
+                svg: `<svg class="w-24 h-24 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>`
+            },
+            "INFJ": {
+                title: "星辰占卜師 (The Star Astrologer)",
+                tagline: "「在黑夜最深處，指引迷途旅人找尋星光」",
+                desc: "你是林間的隱士，也是命運星象的解讀者。你對世界抱著溫柔的同理心，能洞察事物背後的永恆真理。你並不追求世俗的名望，而是默默在陰影中點亮火把，指引命運交織的方向。",
+                relic: "星雲觀測水晶鏡",
+                beast: "幻網靈月貓",
+                itemIcon: "eye",
+                talents: [
+                    "<strong>超感知宿命洞察：</strong> 能在繁雜的事物中迅速察決到隱秘的命運脈絡與同伴的細微情緒變化。",
+                    "<strong>靈魂治癒恩賜：</strong> 擁有安撫狂暴野獸與破碎心靈的強大共情力與感染力。"
+                ],
+                curses: [
+                    "<strong>思慮過度的幽閉牢籠：</strong> 容易陷入無休止的思維死胡同，把自己關在精神世界裡。",
+                    "<strong>靈魂過載疲憊：</strong> 因為吸納了太多周圍人的負能量，極易感到精神乾涸衰竭。"
+                ],
+                match: "吟遊詩人 (ENFP)",
+                svg: `<svg class="w-24 h-24 text-fuchsia-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>`
+            },
+            "INFP": {
+                title: "森林尋夢者 (The Forest Dreamer)",
+                tagline: "「即使世界佈滿荊棘，我依然相信玫瑰會在廢墟盛開」",
+                desc: "你是奇境中最具诗意的精靈。你擁有一顆無比純淨、抗拒世俗塵埃的赤子之心。你喜歡把冒險化作筆下的童話，對世界上的弱小生靈抱有最深沉的悲憫。你一直在尋求自我靈魂的真實共鳴，是守護真善美的最後一道防線。",
+                relic: "生命之樹夢境詩篇",
+                beast: "雲羽白角獸",
+                itemIcon: "book",
+                talents: [
+                    "<strong>純粹信念共鳴：</strong> 擁有無窮無盡的原創幻想，能將最溫柔的情感化為堅不可摧的意志魔法。",
+                    "<strong>守護溫柔結界：</strong> 對身邊之人的痛苦有著天然的理解力，是隊友最溫馨的心靈避風港。"
+                ],
+                curses: [
+                    "<strong>易碎琉璃之心：</strong> 容易被現實的殘酷與粗暴所刺傷，縮回自我編織的夢幻泡泡中。",
+                    "<strong>現實感官斷層：</strong> 對日常瑣事、財務管理或嚴密的時程計畫感到無比抗拒與疲乏。"
+                ],
+                match: "帝國開拓者 (ENTJ)",
+                svg: `<svg class="w-24 h-24 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`
+            },
+            "ENFJ": {
+                title: "光明號召者 (The Radiant Envoy)",
+                tagline: "「握緊我的手，微光終將匯聚成刺破黑暗的烈陽」",
+                desc: "你是神聖而充滿溫暖溫情的冒險導師。你身上散發著讓人無法拒絕的親和力，能輕而易舉地將性格迥異的各路旅人凝聚成一支無堅不摧的勇者隊伍。你深信每個人靈魂深處都有閃光點，並樂此不疲地幫助他人發掘潛力。",
+                relic: "不落晨星權杖",
+                beast: "九天聖光凰",
+                itemIcon: "sun",
+                talents: [
+                    "<strong>心靈默契共鳴：</strong> 擁有頂級的情感凝聚力，能瞬間調和隊伍內的一切矛盾並指引方向。",
+                    "<strong>光芒魅力激勵：</strong> 天生的演說家，能用澎湃的熱情鼓舞人心，驅散一切絕望陰霾。"
+                ],
+                curses: [
+                    "<strong>奉獻過度的枷鎖：</strong> 常常為了滿足所有人的期望而過度壓抑自己，面具下藏著疲憊。",
+                    "<strong>過度干涉他人：</strong> 容易因為「為了你好」而過度插手旅伴的私人抉擇與命運軌道。"
+                ],
+                match: "皇家鍊金術士 (INTP)",
+                svg: `<svg class="w-24 h-24 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`
+            },
+            "ENFP": {
+                title: "吟遊詩人 (The Wandering Bard)",
+                tagline: "「世界是一首未完的歌，而我的腳步就是最美的音符」",
+                desc: "你是森林中最不知疲倦的快樂冒險家。你把生命看作一場盛大的即興歌劇，處處充滿了驚奇與浪漫。你擁有極佳的同理心與無限的創意，任何一朵野花、一隻昆蟲都能成為你吟唱的靈感。你的熱情能點燃所有人對生命的熱愛。",
+                relic: "喚醒萬物微風豎琴",
+                beast: "彩翼幻飛馬",
+                itemIcon: "music",
+                talents: [
+                    "<strong>萬物生命連結：</strong> 社交魅力驚人，能迅速與森林裡的各族生命（不論巨龍還是妖精）打成一片。",
+                    "<strong>繆斯靈感狂潮：</strong> 擁有取之不盡的奇思妙想，能用藝術般的情感魔法點綴枯燥的冒險。"
+                ],
+                curses: [
+                    "<strong>秩序崩塌過載：</strong> 極度痛恨條條框框與繁雜程序，容易因為收尾工作太繁瑣而半途而廢。",
+                    "<strong>情緒暴風起伏：</strong> 外表無比歡樂，內心深處卻時常感到巨大的孤獨與不被理解的落寞。"
+                ],
+                match: "星辰占卜師 (INFJ) / 奧秘學者 (INTJ)",
+                svg: `<svg class="w-24 h-24 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>`
+            },
+            "ISTJ": {
+                title: "城堡守護騎士 (The Castle Guardian Knight)",
+                tagline: "「誓言重於生命，秩序與榮譽是我不滅的信仰」",
+                desc: "你是帝國最堅固的盾牌，是古老城堡不落的基石。你不尚空談，只用最踏實的腳步和最嚴謹的態度默默履職。在兵荒馬亂的冒險中，你是唯一一個永遠能準確保管地圖、維持補給，並在黑夜裡時刻保持警惕的人。",
+                relic: "不滅意志鋼鐵盾",
+                beast: "磐石晶甲龜",
+                itemIcon: "shield",
+                talents: [
+                    "<strong>磐石信用守護：</strong> 忠誠可靠度100%，答應過的事即使歷經刀山火海也一定會踏實辦到。",
+                    "<strong>極致實務規劃：</strong> 對於資源、經費與細節有著極度精確的掌控能力，防範一切未然危機。"
+                ],
+                curses: [
+                    "<strong>守舊靈魂枷鎖：</strong> 面對突如其來的魔法變革容易感到焦慮抗拒，過度依賴過往經驗。",
+                    "<strong>自我苛責重擔：</strong> 容易把所有的責任都攬在自己肩上，活得像一尊無法停下休息的石雕。"
+                ],
+                match: "慶典舞者 (ESFP)",
+                svg: `<svg class="w-24 h-24 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`
+            },
+            "ISFJ": {
+                title: "溫和林間精靈 (The Gentle Forest Sprite)",
+                tagline: "「默默守護你前行的背影，就是我最大的魔法」",
+                desc: "你是森林中最安靜、也最讓人安心的精靈。你不爭名奪利，喜歡把精靈小屋打掃得一塵不染，為歸來的勇者遞上一杯熱騰騰的蜜茶。你對每一個細節都無比溫柔，總是以驚人的奉獻精神照顧著身邊的人。",
+                relic: "大地豐饒蜜露罐",
+                beast: "治癒幻彩鹿",
+                itemIcon: "heart",
+                talents: [
+                    "<strong>溫馨細節守護：</strong> 對於同伴的喜好、傷痛有著驚人的記憶力，能提供無微不至的照顧。",
+                    "<strong>踏實和諧守衛：</strong> 默默在背後承擔所有的繁雜瑣事，用溫柔維持冒險小隊的穩定與和諧。"
+                ],
+                curses: [
+                    "<strong>默默隱忍內傷：</strong> 習慣委曲求全，把所有的委屈、辛苦都吞進肚子裡，容易積勞成疾。",
+                    "<strong>抗拒變革危機：</strong> 面對重大的環境變遷與不確定性時，容易陷入不知所措的恐慌中。"
+                ],
+                match: "奇想魔術師 (ENTP)",
+                svg: `<svg class="w-24 h-24 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`
+            },
+            "ESTJ": {
+                title: "皇家警衛長 (The Royal Commander)",
+                tagline: "「效率就是生命，唯有嚴密組織才能攻無不克」",
+                desc: "你是守衛城堡的最高指揮官。你信奉「沒有規矩不成方圓」。在你眼中，一場成功的冒險是經過精確計算、分工嚴密、紀律嚴明的軍事行動。你絕不容許任何人偷懶或偏離路線，總能帶領團隊以最快速度攻克難關。",
+                relic: "威嚴秩序警衛哨",
+                beast: "獵風雷鳴鷹",
+                itemIcon: "shield",
+                talents: [
+                    "<strong>高效資源調配：</strong> 擁有天生的管理能力，能將隊伍中的每個人安插在最合適的崗位發揮極限。",
+                    "<strong>雷厲風行執行：</strong> 戰鬥力與效率爆棚，任何龐大任務到了你手中都能迅速落地解決。"
+                ],
+                curses: [
+                    "<strong>墨守成規偏執：</strong> 對於突發的奇思妙想、不按常理出牌的狀況容易顯得固執、難以通融。",
+                    "<strong>控制慾過剩警告：</strong> 容易把身邊的親友當作士兵管理，給人造成巨大的無形壓力。"
+                ],
+                match: "幻彩繪夢師 (ISFP)",
+                svg: `<svg class="w-24 h-24 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>`
+            },
+            "ESFJ": {
+                title: "溫馨城堡款待者 (The Warm Hearth Host)",
+                tagline: "「只要大家開心，這場旅程就有了最耀眼的意義」",
+                desc: "你是奇境中最受歡迎的社交大師。你擁有一顆無比熱心溫暖的靈魂，是團隊裡的黏著劑。你熱衷於為大家策劃慶祝晚宴、調解紛爭、確保每個小妖精和旅人都有賓至如歸的體驗。你的存在就是溫暖的港灣。",
+                relic: "暖心茶話魔幻壺",
+                beast: "治癒棉花蝶",
+                itemIcon: "users",
+                talents: [
+                    "<strong>頂級情商融洽：</strong> 擁有極強的同理心，能輕易察覺團體中的冷漠與尷尬，並迅速帶動熱鬧氣氛。",
+                    "<strong>無私後勤保障：</strong> 樂於為大局犧牲付出，把每一個同伴都當作至親家人般細心呵護。"
+                ],
+                curses: [
+                    "<strong>過度討好束縛：</strong> 容易因為過度在乎別人的眼光與評價，而漸漸遺忘了自己最真實的渴望。",
+                    "<strong>抗拒衝突恐懼：</strong> 對於爭執極度敏感焦慮，有時會選擇掩蓋矛盾而非徹底解決矛盾。"
+                ],
+                match: "奇蹟工匠 (ISTP)",
+                svg: `<svg class="w-24 h-24 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`
+            },
+            "ISTP": {
+                title: "奇蹟機械工匠 (The Master Artisan)",
+                tagline: "「別聽他們空談魔法，動手拆開它才能看清核心」",
+                desc: "你是奇境中最酷的孤狼。你不喜歡誇誇其談，更不耐煩那些繁複繁重的繁文縟節。當隊伍遇上壞掉的飛天掃帚或古老的精密機關時，你只會冷靜地掏出螺絲起子與小刀，在一陣清脆的敲擊聲中，輕鬆創造奇蹟。",
+                relic: "千變萬能魔導機關匣",
+                beast: "暗影齒輪貓頭鷹",
+                itemIcon: "wrench",
+                talents: [
+                    "<strong>硬核動手拆解：</strong> 對於物理、機械、道具和具體法術結構有著驚人的直覺，能化腐朽為神奇。",
+                    "<strong>極致冷靜強心臟：</strong> 越是危險突發的戰鬥，越能保持心率不跳，用最省力的高效手段克敵制勝。"
+                ],
+                curses: [
+                    "<strong>冰山孤狼社交：</strong> 不愛表達，常常自己一個人悶頭做事，容易讓同伴誤以為你冷漠、難以共事。",
+                    "<strong>刺激冒險偏執：</strong> 容易為了尋求新鮮感而故意挑戰高風險的魔法禁區，忽視了團隊安全。"
+                ],
+                match: "溫馨城堡款待者 (ESFJ)",
+                svg: `<svg class="w-24 h-24 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`
+            },
+            "ISFP": {
+                title: "幻彩繪夢師 (The Palette Dreamweaver)",
+                tagline: "「不需要永恆的真理，只要記錄下這一刻的絢爛便足矣」",
+                desc: "你是奇境中的靈性藝術家。你用眼睛去捕捉彩虹的最後一抹餘暉，用畫筆將冰冷的石壁化作生機勃勃的魔法森林。你敏感、溫柔、極富美感，對你而言，冒險不是為了打敗什麼，而是為了親自去體驗這世界上無窮無盡的斑斕色彩。",
+                relic: "化虛為實幻彩神筆",
+                beast: "幻月琉璃蝶",
+                itemIcon: "palette",
+                talents: [
+                    "<strong>極致美學靈感：</strong> 能看見常人忽略的大自然之美，將充沛的情感與美感融入日常戰鬥與探索。",
+                    "<strong>低調隨和包容：</strong> 像水一樣具有極佳的適應性，不爭名不奪利，是團隊中最舒適的存在。"
+                ],
+                curses: [
+                    "<strong>逃避衝突黑洞：</strong> 一旦遇到激烈的對抗與指責，容易立刻縮回自己的彩繪世界中拒絕溝通。",
+                    "<strong>缺乏長遠規劃：</strong> 完全不喜歡思考繁雜的未來，經常陷入「今朝有酒今朝醉」的迷茫中。"
+                ],
+                match: "皇家警衛長 (ESTJ)",
+                svg: `<svg class="w-24 h-24 text-pink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>`
+            },
+            "ESTP": {
+                title: "烈焰冒險家 (The Blaze Daredevil)",
+                tagline: "「生命在於挑戰！猶豫不決的人只配留在原地看煙塵」",
+                desc: "你是森林中最耀眼的紅色火花。你擁有無與倫比的感官敏銳度與強大的身體爆發力。你從不為昨天懊悔，也不為明天擔憂。當巨龍噴火、大地崩裂時，你只會興奮地大笑一聲，跨過裂谷，用最燃的姿態解決一切危難。",
+                relic: "破空疾馳烈焰靴",
+                beast: "烈焰獅虎獸",
+                itemIcon: "flame",
+                talents: [
+                    "<strong>極致危機直覺：</strong> 擁有頂級的臨場反應速度，能在刀尖跳舞，瞬間化解實體危險。",
+                    "<strong>超凡實踐魅力：</strong> 精力無窮，實踐派領袖，能迅速用行動力感染身邊所有人跟著前進。"
+                ],
+                curses: [
+                    "<strong>莽撞行事隱患：</strong> 常常還沒聽完長老的警告就直接衝入險地，可能讓小隊陷入被動。",
+                    "<strong>缺乏深度耐心：</strong> 面對長篇大論的古老魔導書或繁複的邏輯討論會感到極度煩躁、哈欠連天。"
+                ],
+                match: "林間小天使 (ISFJ)",
+                svg: `<svg class="w-24 h-24 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>`
+            },
+            "ESFP": {
+                title: "奇境慶典舞者 (The Jubilee Dancer)",
+                tagline: "「讓音樂響起，此時此刻，我們就是奇境的主角！」",
+                desc: "你是整個奇境中最耀眼的太陽。你天生就是聚光燈下的焦點，一舉一動都充滿了令人快樂的魔法能量。對你而言，冒險是一場永不停歇的狂歡慶典。你擅長把枯燥的長途跋涉變成一場充滿歌聲與笑聲的美麗遊行。",
+                relic: "萬眾矚目狂歡搖鈴",
+                beast: "極光羽霓雀",
+                itemIcon: "sparkles",
+                talents: [
+                    "<strong>爆棚現場感染力：</strong> 天生的娛樂大師，能瞬間驅散任何人臉上的悲傷，營造極致歡樂氣氛。",
+                    "<strong>頂級生活美學家：</strong> 極度懂得享受當下的美食、美景與一切精緻的事物，是最佳的旅途玩伴。"
+                ],
+                curses: [
+                    "<strong>深度思考恐懼：</strong> 不喜歡觸碰沉重、悲傷或過於複雜、宏觀的命運哲理，容易選擇性逃避。",
+                    "<strong>情緒化衝動消費：</strong> 容易被精美的魔法道具外觀吸引而衝動買下，不善於管理冒險經費。"
+                ],
+                match: "城堡守護騎士 (ISTJ)",
+                svg: `<svg class="w-24 h-24 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>`
+            }
+        };
+
+        const chaptersInfo = [
+            { id: 1, title: "第一章：啟程之晨", desc: "微光穿透林冠，你來到了冒險的第一道命運交匯點..." },
+            { id: 2, title: "第二章：細語之森", desc: "古老橡樹在微風中低語，精靈與奇遇正考驗著你的抉擇..." },
+            { id: 3, title: "第三章：幻鏡之湖", desc: "澄澈純淨的湖水倒映出靈魂與實相，這需要你傾聽理智與靈性..." },
+            { id: 4, title: "第四章：雲端城堡", desc: "巍峨的空中天階與宮廷之規正在前方，考驗你對秩序或探索的熱忱..." },
+            { id: 5, title: "第五章：暮光加冕", desc: "夕陽燃燒，終章將臨，王冠下的不朽預言由你的最後一塊基石決定..." }
+        ];
+
+    </script>
+</body>
+</html>

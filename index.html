@@ -39,6 +39,14 @@
             pointer-events: none;
             z-index: 1;
         }
+        /* Reverse spin for the magical calculation portal */
+        @keyframes reverse-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+        .animate-reverse-spin {
+            animation: reverse-spin 3s linear infinite;
+        }
         /* Scrollbar customization */
         ::-webkit-scrollbar {
             width: 8px;
@@ -252,7 +260,7 @@
                         <!-- Mini Stats Grid -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="bg-purple-900/10 border border-purple-500/10 rounded-xl p-4 flex items-center gap-3">
-                                <div class="p-2 bg-yellow-500/10 rounded-lg text-yellow-300">
+                                <div class="p-2 bg-yellow-500/10 rounded-lg text-yellow-300" id="magic-item-icon-container">
                                     <i data-lucide="sparkles" id="magic-item-icon" class="w-5 h-5"></i>
                                 </div>
                                 <div>
@@ -305,7 +313,7 @@
                             </li>
                             <li class="flex items-start gap-2">
                                 <span class="text-rose-400 mt-0.5">✦</span>
-                                <span><strong>抗拒凡塵的潔癖：</strong> 對於俗世的琐碎規則容易感到疲倦與排斥。</span>
+                                <span><strong>抗拒凡塵的潔癖：</strong> 對於俗世的瑣碎規則容易感到疲倦與排斥。</span>
                             </li>
                         </ul>
                     </div>
@@ -478,7 +486,9 @@
                 btn.classList.add('text-yellow-400');
                 playSound('click');
             }
-            lucide.createIcons();
+            try {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } catch(e) {}
         }
     </script>
 
@@ -489,6 +499,7 @@
         let activeQuestions = [];
         let currentQuestionIdx = 0;
         let answers = []; // stores 'A' or 'B' for each question index
+        let isTransitioning = false; // MAGICAL TRANSITION LOCK - Prevents double clicking crashes
 
         // Generating Background Sparkle Effects
         function spawnSparkles() {
@@ -524,7 +535,9 @@
         // Initialize particles & Icons on load
         window.addEventListener('DOMContentLoaded', () => {
             spawnSparkles();
-            lucide.createIcons();
+            try {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } catch(e) {}
         });
 
         // ------------------ HIGHLY DIVERSE MBTI QUESTION POOL (120 Questions) ------------------
@@ -580,7 +593,7 @@
                 { id: "SN_16", dim: "SN", q: "在解鎖神秘石門的密碼時，你的策略是：", a: "仔細檢查石碑上的磨損程度，對比歷代探險者的指紋與痕跡", b: "閉上眼感受石門散發的靈氣，尋找文字密碼中的意象關聯" },
                 { id: "SN_17", dim: "SN", q: "你如何看待童話世界中的「金錢」？", a: "它是實實在在、能買到魔藥和優質裝備的貨幣", b: "它只是一種流通的能量符號，代表著資源與機遇的流轉" },
                 { id: "SN_18", dim: "SN", q: "對於魔法學術界爭論不休的「隱形斗篷原理」，你認為：", a: "應該專注於材質塗層與光學折射的物理研究，給出具體公式", b: "這涉及到空間本質的扭曲，應該探討觀測者與被觀測者的哲學關係" },
-                { id: "SN_19", dim: "SN", q: "當精靈朋友向你訴說他的「宏偉夢想」時，你通常會：", a: "幫他評估這個夢想需要多少預算、幾名人力和實際工期", b: "與他一起描繪夢想實現後的壯麗畫面，並給予無限的情感鼓勵" },
+                { id: "SN_19", dim: "SN", q: "當精靈朋友向你訴說他的「宏偉夢想」時，你通常會：", a: "幫他評估這個夢想需要多少預算、幾名人力 and 實際工期", b: "與他一起描繪夢想實現後的壯麗畫面，並給予無限的情感鼓勵" },
                 { id: "SN_20", dim: "SN", q: "你在市集挑選一件魔法斗篷，你最在意：", a: "保暖防風性、口袋多不多、材質是否耐磨防水", b: "款式是否獨特、能否代表你的個人風格與神祕氣質" },
                 { id: "SN_21", dim: "SN", q: "在迷霧中趕路時，你更信任：", a: "手中的指南針、GPS水晶與實際踏過的地面實感", b: "內心深處的方位感、與直覺指引的那道微弱微光" },
                 { id: "SN_22", dim: "SN", q: "如果世界末日即將來臨，你認為最重要的是：", a: "儲備糧食、水、防禦武器，確保肉體能活下去", b: "保留人類的文明火種、哲學古籍與靈魂的記憶結晶" },
@@ -596,13 +609,13 @@
             TF: [
                 { id: "TF_1", dim: "TF", q: "守護者雕像出了一道邏輯謎題，答錯會被關進石門。你會？", a: "冷靜分析謎題文字中的邏輯漏洞與字面線索來解謎", b: "感受雕像落寞的神情，猜測建造者背後的初衷與情感來找出答案" },
                 { id: "TF_2", dim: "TF", q: "兩個矮人因為一柄黃金斧頭的歸屬權而大吵大鬧。你的調解方式是？", a: "核對古老律法與斧頭上的鑄造名字，給出絕對公正的判定", b: "聆聽兩人的苦衷，試著找出一個不傷感情且皆大歡喜的和解辦法" },
-                { id: "TF_3", dim: "TF", q: "你需要研發一種新藥水，你的研究風格是？", a: "嚴格控制每毫克的藥粉與煮沸時間，確保結果精準無誤", b: "憑藉直覺與靈性加入淚水和晨露，賦予藥水情感的力量" },
+                { id: "TF_3", dim: "TF", q: "你需要研發一種新藥水，你的研究風格是？", a: "嚴格控制每毫克的藥粉與煮沸時間，確保結果精準無誤", b: "憑藉直覺與靈性加入淚水 and 晨露，賦予藥水情感的力量" },
                 { id: "TF_4", dim: "TF", q: "在冒險小隊面臨物資匱乏時，身為領袖你會？", a: "理性按每個人對隊伍的貢獻比例重新分配資源，以求效益最大化", b: "顧及每個人的心理感受，即使犧牲自己一些也要確保大家感到公平溫暖" },
                 { id: "TF_5", dim: "TF", q: "如果你的魔宠犯了錯，打破了村裡的規章，你會？", a: "秉公辦理，讓牠接受該有的懲罰，這樣才能讓牠吸取教訓", b: "護著牠並向村民道歉，畢竟牠不是故意的，牠此時一定很害怕" },
                 { id: "TF_6", dim: "TF", q: "精靈長老邀請你評價他拙劣的詩作，你會：", a: "指出平仄和韻律的不足，給出建設性的實用建議", b: "大力讚美他投入的情感，不想打擊他的創作熱情" },
                 { id: "TF_7", dim: "TF", q: "湖中精靈說你必須犧牲一件心愛之物才能拯救一個陌生精靈：", a: "理性計算得失，衡量陌生精靈對世界未來的價值與自身代價", b: "不忍看著生命逝去，憑藉直覺與澎湃同情心立刻答應" },
                 { id: "TF_8", dim: "TF", q: "法庭上，一位少年因偷竊魔法麵包給生病的母親而被捕。你會：", a: "法律就是法律，必須秉公審判，但可以私下給予金錢救濟", b: "法律應當具有同理心，考慮少年高尚的動機，給予當庭免刑" },
-                { id: "TF_9", dim: "TF", q: "戰勝暗黑魔王後，對於投降的嘍囉，你認為：", a: "必須按戰犯條約給予最冷酷理智的審判，斬草除根防止復燃", b: "給予寬恕與感化，相信愛的溫暖能洗滌他們受創的靈魂" },
+                { id: "TF_9", dim: "TF", q: "戰勝暗黑魔王後，對於投降的嘍囉，你認為：", a: "必須按戰犯條約給予最冷酷理智的審判，斬草根防止復燃", b: "給予寬恕與感化，相信愛的溫暖能洗滌他們受創的靈魂" },
                 { id: "TF_10", dim: "TF", q: "當旅伴在哭泣時，你的第一反應通常是：", a: "幫他分析哭泣的原因，並提出解決困難的實際步驟", b: "默默遞上紙巾，給予他一個溫暖的擁抱，陪他一起難過" },
                 { id: "TF_11", dim: "TF", q: "你在評價一個魔法的好壞時，你的標準是：", a: "它是否實用、消耗魔力是否低、戰鬥效率是否高", b: "它是否人道、會不會對森林生態與生命造成傷害" },
                 { id: "TF_12", dim: "TF", q: "如果團隊裡有兩個人發生了嚴重的學術分歧，你會：", a: "讓他們拿出客觀證據與邏輯數據，誰對聽誰的，絕不姑息", b: "私下調解，引導大家尋找共同點，避免傷害了隊伍和氣" },
@@ -623,7 +636,7 @@
                 { id: "TF_27", dim: "TF", q: "你如何看待童話世界中的「約定」？", a: "It is a sacred contract; unless force majeure occurs, it must be executed.", b: "It is a bridge of human emotion; if situations change and nobody is hurt, it can be adjusted." },
                 { id: "TF_28", dim: "TF", q: "當你看到一幅描繪「戰爭悲劇」的畫作：", a: "你開始分析戰爭爆發的底層政治、經濟與資源匱乏因果", b: "你被畫中孤兒落淚的眼神深深刺痛，沉浸在巨大的同理與哀傷中" },
                 { id: "TF_29", dim: "TF", q: "精靈大會上，一個好的提議因為得罪了長老而陷入僵局，你會：", a: "堅持真理與效率，據理力爭，認為不應為了長老面子犧牲大局", b: "尋找一個折衷的溫和說法，給足長老面子，緩解尷尬氣氛" },
-                { id: "TF_30", dim: "TF", q: "你認為一隻優秀的冒險團隊最不可或缺的是：", a: "鋼鐵般的紀律、明確的分工以及高效的執行力", b: "家庭般的溫暖、互相信任的情感紐帶以及包容心" }
+                { id: "TF_30", dim: "TF", q: "你認為一隻優秀的冒險團隊最不可缺的是：", a: "鋼鐵般的紀律、明確的分工以及高效的執行力", b: "家庭般的溫暖、互相信任的情感紐帶以及包容心" }
             ],
             JP: [
                 { id: "JP_1", dim: "JP", q: "踏入森林前，你的行李準備狀態是？", a: "按照清單一項項清點，裝備齊全且分門別類放好", b: "隨意塞了一些覺得有用的魔法粉末，計畫一路上走著瞧" },
@@ -635,7 +648,7 @@
                 { id: "JP_7", dim: "JP", q: "在湖畔紮營時，你的營地通常是：", a: "帳篷搭建得非常牢固對稱，柴火整齊碼放，防禦結界拉好", b: "帳篷隨意搭著，睡袋歪向一邊，桌上隨手擺放撿來的彩石" },
                 { id: "JP_8", dim: "JP", q: "面對雲端城堡複雜的皇家規矩與時間表：", a: "感到非常舒適，嚴格遵守作息能讓你的生活無比充實有效率", b: "覺得備受束縛，總是想尋找機會偷偷打破規矩溜出去玩" },
                 { id: "JP_9", dim: "JP", q: "對於建國大業的未來藍圖，你更傾向於：", a: "制定一份詳細的五年建國規劃書，確保帝國步步為營", b: "定下繁榮自由的大方向，讓子民們自由隨性發展，順其自然" },
-                { id: "JP_10", dim: "JP", q: "當你受邀參加一場尋寶比賽，你會：", a: "提前收集所有情報，列出可能埋藏寶物的位置清單，精準排查", b: "漫步在賽場中，一邊欣賞風景一邊憑運氣和臨場靈感尋寶" },
+                { id: "JP_10", dim: "JP", q: "當你受邀參加一場尋寶比賽，你會：", a: "提前收集所有情報，列出可能埋藏寶物的位置清單，精準排查", b: "漫步在賽場中，一邊欣賞風景一邊憑運氣 and 臨場靈感尋寶" },
                 { id: "JP_11", dim: "JP", q: "精靈女王在最後一刻突然更改了加冕儀式的流程，你會：", a: "感到十分不適與惱怒，因為你已經為原流程做好了完美準備", b: "毫不在意，認為隨機應變才是魔法的最高境界，欣然接受" },
                 { id: "JP_12", dim: "JP", q: "你的私人樹洞房間，通常的雜亂程度是：", a: "一塵不染，每本書、每顆水晶都擺放在固定的位置", b: "極度混亂，但你卻能在這片「混亂」中精準找到你要的魔杖" },
                 { id: "JP_13", dim: "JP", q: "當你決定去另一個浮空島旅行，你通常：", a: "提前一個月訂好飛空艇票，列出每日必去景點與餐廳清單", b: "只買一張單程票，到了當地再看哪裡好玩就去哪裡" },
@@ -701,6 +714,7 @@
 
         function startJourney() {
             playSound('win');
+            isTransitioning = false; // Reset the transition lock state
             
             // Generate a fresh, non-overlapping randomized dataset per dimension on every click!
             const countPerDim = (selectedMode === 'full') ? 25 : 5;
@@ -740,10 +754,11 @@
         }
 
         function updateQuestion() {
+            if (currentQuestionIdx >= activeQuestions.length) return;
             const currentQ = activeQuestions[currentQuestionIdx];
             
-            // Update Chapter badge and title
-            const chInfo = chaptersInfo.find(c => c.id === currentQ.chapter);
+            // Update Chapter badge and title with robust fallback
+            const chInfo = chaptersInfo.find(c => c.id === currentQ.chapter) || chaptersInfo[0];
             document.getElementById('chapter-badge').innerText = chInfo.title;
             document.getElementById('chapter-title').innerText = chInfo.desc;
             
@@ -761,7 +776,7 @@
                 "JP": "這反映了你追求古老神聖秩序，還是精靈自由隨性生活的冒險作風..."
             };
             
-            document.getElementById('scene-description').innerText = dimensionThemes[currentQ.dim];
+            document.getElementById('scene-description').innerText = dimensionThemes[currentQ.dim] || "這是一道決定你命運核心的靈魂抉擇...";
 
             // Progress Update
             const total = activeQuestions.length;
@@ -788,6 +803,10 @@
         }
 
         function selectOption(option) {
+            // Guard clause to completely stop double-click/spam race conditions
+            if (isTransitioning) return;
+            isTransitioning = true;
+
             playSound('select');
             answers[currentQuestionIdx] = option;
 
@@ -803,13 +822,15 @@
                 if (currentQuestionIdx < activeQuestions.length - 1) {
                     currentQuestionIdx++;
                     updateQuestion();
+                    isTransitioning = false; // Release input lock after rendering next question
                 } else {
-                    finishJourney();
+                    finishJourney(); // Transitioning flag remains locked to prevent clicks during loading
                 }
             }, 250);
         }
 
         function previousQuestion() {
+            if (isTransitioning) return; // Prevent navigation during transition delays
             if (currentQuestionIdx > 0) {
                 playSound('click');
                 currentQuestionIdx--;
@@ -819,6 +840,7 @@
 
         // Cheat function for testing/fast access
         function cheatComplete() {
+            isTransitioning = true;
             for (let i = 0; i < answers.length; i++) {
                 if (answers[i] === null) {
                     answers[i] = Math.random() > 0.5 ? 'A' : 'B';
@@ -833,7 +855,7 @@
             "INTJ": {
                 title: "奧秘學者 (The Arcane Scholar)",
                 tagline: "「在孤獨的巨塔之上，用真理編織未來的星圖」",
-                desc: "你擁有高聳入雲的心智巨塔。你不隨波逐流，喜歡透過繁複的魔導理論去洞悉世界的運行規律。在你的眼中，沒有無法被邏輯拆解的谜題，你永遠在為最長遠的命運規劃著宏偉的藍圖。",
+                desc: "你擁有高聳入雲的心智巨塔。你不隨波逐流，喜歡透過繁複的魔導理論去洞悉世界的運行規律。在你的眼中，沒有無法被邏輯拆解的謎題，你永遠在為最長遠的命運規劃著宏偉的藍圖。",
                 relic: "萬象真理星軌盤",
                 beast: "裂空幽冥隼",
                 itemIcon: "compass",
@@ -854,10 +876,10 @@
                 desc: "你是奇境中不眠不休的真理追尋者。比起統治城堡，你更喜歡躲在布滿試管與古籍的地下室。你的好奇心是無底的深淵，對你而言，將截然不同的元素融合、並推導出全新理論是世界上最美妙的事情。",
                 relic: "永恆元素賢者之石",
                 beast: "知慧幽瞳鴞",
-                itemIcon: "flask",
+                itemIcon: "flask-conical",
                 talents: [
                     "<strong>千變鍊金奇想：</strong> 邏輯推理天馬行空，能在極短時間內想到極具創意的非傳統解法。",
-                    "<strong>客觀真理濾鏡：</strong> 絕不被偏見左右，能極度公正客观地剖析複雜難題。"
+                    "<strong>客觀真理濾鏡：</strong> 絕不被偏見左右，能極度公正客觀地剖析複雜難題。"
                 ],
                 curses: [
                     "<strong>無盡拖延魔咒：</strong> 沉溺於理論架構而遲遲不肯動手將魔藥熬製出來。",
@@ -868,13 +890,13 @@
             },
             "ENTJ": {
                 title: "帝國開拓者 (The Sovereign Pioneer)",
-                tagline: "「我的劍锋所指，便是帝國疆域的擴張之處」",
+                tagline: "「我的劍鋒所指，便是帝國疆域的擴張之處」",
                 desc: "你生來就是要站在雲端城堡最頂端俯瞰大地的。你具有鋼鐵般的意志和無與倫比的組織天賦。面對混亂與危機，你絕不退縮，能迅速重整冒險隊伍，帶領所有人突破致命的防禦屏障，建立起不朽的秩序。",
                 relic: "至高主宰審判之劍",
                 beast: "黃金獅鷲獸",
                 itemIcon: "shield",
                 talents: [
-                    "<strong>鐵腕戰術決策：</strong> 擁有驚人的決斷力，在生死关頭能面不改色地做出最利隊伍的布局。",
+                    "<strong>鐵腕戰術決策：</strong> 擁有驚人的決斷力，在生死關頭能面不改色地做出最利隊伍的布局。",
                     "<strong>無畏領袖氣場：</strong> 能激發整支隊伍的鬥志，讓原本怯懦的士兵爆發出騎士般的勇氣。"
                 ],
                 curses: [
@@ -897,7 +919,7 @@
                 ],
                 curses: [
                     "<strong>三分鐘熱度狂熱：</strong> 容易同時開啟十個好玩的魔法項目，卻沒有一個能堅持熬製完成。",
-                    "<strong>惡作劇過度警報：</strong> 為了好玩而故意挑釁古老權威，可能給隊伍帶來不必要的麻煩。"
+                    "<strong>惡作劇過度警報：</strong> 為了好玩而故意挑釁古老權威，可能給隊伍帶來不必要的壓力。"
                 ],
                 match: "溫和林間精靈 (ISFJ)",
                 svg: `<svg class="w-24 h-24 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>`
@@ -910,7 +932,7 @@
                 beast: "幻網靈月貓",
                 itemIcon: "eye",
                 talents: [
-                    "<strong>超感知宿命洞察：</strong> 能在繁雜的事物中迅速察決到隱秘的命運脈絡與同伴的細微情緒變化。",
+                    "<strong>超感知宿命洞察：</strong> 能在繁雜的事物中迅速察覺到隱秘的命運脈絡與同伴的細微情緒變化。",
                     "<strong>靈魂治癒恩賜：</strong> 擁有安撫狂暴野獸與破碎心靈的強大共情力與感染力。"
                 ],
                 curses: [
@@ -923,10 +945,10 @@
             "INFP": {
                 title: "森林尋夢者 (The Forest Dreamer)",
                 tagline: "「即使世界佈滿荊棘，我依然相信玫瑰會在廢墟盛開」",
-                desc: "你是奇境中最具诗意的精靈。你擁有一顆無比純淨、抗拒世俗塵埃的赤子之心。你喜歡把冒險化作筆下的童話，對世界上的弱小生靈抱有最深沉的悲憫。你一直在尋求自我靈魂的真實共鳴，是守護真善美的最後一道防線。",
+                desc: "你是奇境中最具詩意的精靈。你擁有一顆無比純淨、抗拒世俗塵埃的赤子之心。你喜歡把冒險化作筆下的童話，對世界上的弱小生靈抱有最深沉的悲憫。你一直在尋求自我靈魂的真實共鳴，是守護真善美的最後一道防線。",
                 relic: "生命之樹夢境詩篇",
                 beast: "雲羽白角獸",
-                itemIcon: "book",
+                itemIcon: "book-open",
                 talents: [
                     "<strong>純粹信念共鳴：</strong> 擁有無窮無盡的原創幻想，能將最溫柔的情感化為堅不可摧的意志魔法。",
                     "<strong>守護溫柔結界：</strong> 對身邊之人的痛苦有著天然的理解力，是隊友最溫馨的心靈避風港。"
@@ -947,7 +969,7 @@
                 itemIcon: "sun",
                 talents: [
                     "<strong>心靈默契共鳴：</strong> 擁有頂級的情感凝聚力，能瞬間調和隊伍內的一切矛盾並指引方向。",
-                    "<strong>光芒魅力激勵：</strong> 天生的演說家，能用澎湃的熱情鼓舞人心，驅散一切絕望陰霾。",
+                    "<strong>光芒魅力激勵：</strong> 天生的演說家，能用澎湃的熱情鼓舞人心，驅散一切絕望陰霾。"
                 ],
                 curses: [
                     "<strong>奉獻過度的枷鎖：</strong> 常常為了滿足所有人的期望而過度壓抑自己，面具下藏著疲憊。",
@@ -1013,7 +1035,7 @@
             "ESTJ": {
                 title: "皇家警衛長 (The Royal Commander)",
                 tagline: "「效率就是生命，唯有嚴密組織才能攻無不克」",
-                desc: "你是守衛城堡的最高指揮官。你信奉「沒有規矩不成方圓」。在你眼中，一場成功的冒險是經過精確計算、分工嚴密、紀律嚴明的軍事行動。你絕不容許任何人偷懶或偏離路線，總能帶領團隊以最快速度攻克難關。",
+                desc: "你是守衛城堡的最高指揮官。你信奉「沒有規矩不成方圓」。在你眼中，一場成功的冒險是經過精確計算、分工嚴密、紀律嚴明的軍事行動。你裝不容許任何人偷懶或偏離路線，總能帶領團隊以最快速度攻克難關。",
                 relic: "威嚴秩序警衛哨",
                 beast: "獵風雷鳴鷹",
                 itemIcon: "shield",
@@ -1108,7 +1130,7 @@
                 beast: "極光羽霓雀",
                 itemIcon: "sparkles",
                 talents: [
-                    "<strong>爆棚現場感染力：</strong> 天生的娛樂大師，能瞬間驅散任何人臉上的悲傷，營造極致歡樂氣氛。",
+                    "<strong>萬棚現場感染力：</strong> 天生的娛樂大師，能瞬間驅散任何人臉上的悲傷，營造極致歡樂氣氛。",
                     "<strong>頂級生活美學家：</strong> 極度懂得享受當下的美食、美景與一切精緻的事物，是最佳的旅途玩伴。"
                 ],
                 curses: [
@@ -1121,15 +1143,14 @@
         };
 
         function finishJourney() {
-            // Hide Quiz, Show Calculation Loader
+            // Lock inputs and transition immediately
+            isTransitioning = true;
             document.getElementById('quiz-screen').classList.add('hidden');
             const loader = document.getElementById('loading-screen');
             loader.classList.remove('hidden');
 
-            // Play win sound effect
             playSound('win');
 
-            // Simulate magical calculation delays
             const tips = [
                 "正在召喚精靈長老解讀幻鏡...",
                 "正在向生命之樹尋求預言...",
@@ -1151,96 +1172,107 @@
         }
 
         function calculateAndShowResult() {
-            // Calculate ratios
-            let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-            let totals = { EI: 0, SN: 0, TF: 0, JP: 0 };
+            try {
+                // Calculate ratios
+                let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+                let totals = { EI: 0, SN: 0, TF: 0, JP: 0 };
 
-            activeQuestions.forEach((q, idx) => {
-                const ans = answers[idx];
-                const dim = q.dim; // "EI", "SN", etc.
-                totals[dim]++;
+                activeQuestions.forEach((q, idx) => {
+                    const ans = answers[idx];
+                    const dim = q.dim; // "EI", "SN", etc.
+                    totals[dim]++;
 
-                const poleA = dim[0]; // 'E', 'S', 'T', 'J'
-                const poleB = dim[1]; // 'I', 'N', 'F', 'P'
+                    const poleA = dim[0]; // 'E', 'S', 'T', 'J'
+                    const poleB = dim[1]; // 'I', 'N', 'F', 'P'
 
-                if (ans === 'A') {
-                    scores[poleA]++;
-                } else {
-                    scores[poleB]++;
+                    if (ans === 'A') {
+                        scores[poleA]++;
+                    } else {
+                        scores[poleB]++;
+                    }
+                });
+
+                // Calculate percentages safely (ensure no division by 0)
+                const pctE = totals.EI > 0 ? Math.round((scores.E / totals.EI) * 100) : 50;
+                const pctI = 100 - pctE;
+                
+                const pctS = totals.SN > 0 ? Math.round((scores.S / totals.SN) * 100) : 50;
+                const pctN = 100 - pctS;
+
+                const pctT = totals.TF > 0 ? Math.round((scores.T / totals.TF) * 100) : 50;
+                const pctF = 100 - pctT;
+
+                const pctJ = totals.JP > 0 ? Math.round((scores.J / totals.JP) * 100) : 50;
+                const pctP = 100 - pctJ;
+
+                // Determine final personality code
+                const code = `${pctE >= 50 ? 'E':'I'}${pctS >= 50 ? 'S':'N'}${pctT >= 50 ? 'T':'F'}${pctJ >= 50 ? 'J':'P'}`;
+                
+                // Get personality profile
+                const profile = mbtiArchetypes[code] || mbtiArchetypes["INFJ"];
+
+                // Update DOM with results
+                document.getElementById('archetype-mbti').innerText = code;
+                document.getElementById('archetype-title').innerText = profile.title;
+                document.getElementById('archetype-tagline').innerText = profile.tagline;
+                document.getElementById('archetype-desc').innerText = profile.desc;
+                document.getElementById('magic-relic').innerText = profile.relic;
+                document.getElementById('guardian-beast').innerText = profile.beast;
+                document.getElementById('best-match-title').innerText = profile.match;
+                document.getElementById('archetype-graphic').innerHTML = profile.svg;
+
+                // Safely update Lucide icon inside custom container to prevent Lucide's recreation crashing on restarts
+                const iconContainer = document.getElementById('magic-item-icon-container');
+                if (iconContainer) {
+                    iconContainer.innerHTML = `<i data-lucide="${profile.itemIcon}" class="w-5 h-5"></i>`;
                 }
-            });
 
-            // Calculate percentages
-            const pctE = Math.round((scores.E / totals.EI) * 100);
-            const pctI = 100 - pctE;
-            
-            const pctS = Math.round((scores.S / totals.SN) * 100);
-            const pctN = 100 - pctS;
+                // Populate Strengths & Weaknesses lists
+                const talentList = document.getElementById('talent-list');
+                talentList.innerHTML = profile.talents.map(t => `<li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">✦</span><span>${t}</span></li>`).join('');
 
-            const pctT = Math.round((scores.T / totals.TF) * 100);
-            const pctF = 100 - pctT;
+                const curseList = document.getElementById('curse-list');
+                curseList.innerHTML = profile.curses.map(c => `<li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">✦</span><span>${c}</span></li>`).join('');
 
-            const pctJ = Math.round((scores.J / totals.JP) * 100);
-            const pctP = 100 - pctJ;
+                // Update Magic Bars
+                document.getElementById('score-e').innerText = `${pctE}%`;
+                document.getElementById('score-i').innerText = `${pctI}%`;
+                document.getElementById('bar-e').style.width = `${pctE}%`;
+                document.getElementById('bar-i').style.width = `${pctI}%`;
 
-            // Determine final personality code
-            const code = `${pctE >= 50 ? 'E':'I'}${pctS >= 50 ? 'S':'N'}${pctT >= 50 ? 'T':'F'}${pctJ >= 50 ? 'J':'P'}`;
-            
-            // Get personality profile
-            const profile = mbtiArchetypes[code] || mbtiArchetypes["INFJ"];
+                document.getElementById('score-s').innerText = `${pctS}%`;
+                document.getElementById('score-n').innerText = `${pctN}%`;
+                document.getElementById('bar-s').style.width = `${pctS}%`;
+                document.getElementById('bar-n').style.width = `${pctN}%`;
 
-            // Update DOM with results
-            document.getElementById('archetype-mbti').innerText = code;
-            document.getElementById('archetype-title').innerText = profile.title;
-            document.getElementById('archetype-tagline').innerText = profile.tagline;
-            document.getElementById('archetype-desc').innerText = profile.desc;
-            document.getElementById('magic-relic').innerText = profile.relic;
-            document.getElementById('guardian-beast').innerText = profile.beast;
-            document.getElementById('best-match-title').innerText = profile.match;
-            document.getElementById('archetype-graphic').innerHTML = profile.svg;
+                document.getElementById('score-t').innerText = `${pctT}%`;
+                document.getElementById('score-f').innerText = `${pctF}%`;
+                document.getElementById('bar-t').style.width = `${pctT}%`;
+                document.getElementById('bar-f').style.width = `${pctF}%`;
 
-            // Load icon Lucide for magic-item-icon dynamically based on character
-            const iconElement = document.getElementById('magic-item-icon');
-            iconElement.setAttribute('data-lucide', profile.itemIcon);
+                document.getElementById('score-j').innerText = `${pctJ}%`;
+                document.getElementById('score-p').innerText = `${pctP}%`;
+                document.getElementById('bar-j').style.width = `${pctJ}%`;
+                document.getElementById('bar-p').style.width = `${pctP}%`;
 
-            // Populate Strengths & Weaknesses lists
-            const talentList = document.getElementById('talent-list');
-            talentList.innerHTML = profile.talents.map(t => `<li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">✦</span><span>${t}</span></li>`).join('');
+                // Hide Loader, Show Results
+                document.getElementById('loading-screen').classList.add('hidden');
+                const resultScreen = document.getElementById('result-screen');
+                resultScreen.classList.remove('hidden');
 
-            const curseList = document.getElementById('curse-list');
-            curseList.innerHTML = profile.curses.map(c => `<li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">✦</span><span>${c}</span></li>`).join('');
+                // Scroll to top of result card smoothly
+                resultScreen.scrollIntoView({ behavior: 'smooth' });
 
-            // Update Magic Bars
-            document.getElementById('score-e').innerText = `${pctE}%`;
-            document.getElementById('score-i').innerText = `${pctI}%`;
-            document.getElementById('bar-e').style.width = `${pctE}%`;
-            document.getElementById('bar-i').style.width = `${pctI}%`;
-
-            document.getElementById('score-s').innerText = `${pctS}%`;
-            document.getElementById('score-n').innerText = `${pctN}%`;
-            document.getElementById('bar-s').style.width = `${pctS}%`;
-            document.getElementById('bar-n').style.width = `${pctN}%`;
-
-            document.getElementById('score-t').innerText = `${pctT}%`;
-            document.getElementById('score-f').innerText = `${pctF}%`;
-            document.getElementById('bar-t').style.width = `${pctT}%`;
-            document.getElementById('bar-f').style.width = `${pctF}%`;
-
-            document.getElementById('score-j').innerText = `${pctJ}%`;
-            document.getElementById('score-p').innerText = `${pctP}%`;
-            document.getElementById('bar-j').style.width = `${pctJ}%`;
-            document.getElementById('bar-p').style.width = `${pctP}%`;
-
-            // Hide Loader, Show Results
-            document.getElementById('loading-screen').classList.add('hidden');
-            const resultScreen = document.getElementById('result-screen');
-            resultScreen.classList.remove('hidden');
-
-            // Scroll to top of result card smoothly
-            resultScreen.scrollIntoView({ behavior: 'smooth' });
-
-            // Re-render new Lucide Icons
-            lucide.createIcons();
+                // Re-render new Lucide Icons safely
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            } catch (err) {
+                console.error("運算結果出錯:", err);
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('intro-screen').classList.remove('hidden');
+                isTransitioning = false;
+            }
         }
 
         function shareResult() {
@@ -1250,7 +1282,6 @@
             
             const shareText = `🌲✨ 我剛在「奇幻命運森林」解鎖了我的童話靈魂職業！\n🔮 我的幻鏡診斷為：【${code} - ${title}】\n專屬魔法器具是「${document.getElementById('magic-relic').innerText}」，守護神獸是「${document.getElementById('guardian-beast').innerText}」！\n快來看看你的靈魂童話轉世是什麼吧！👉 `;
             
-            // Traditional fallback clipboard copy helper (Safe in iframe environments)
             const el = document.createElement('textarea');
             el.value = shareText + window.location.href;
             document.body.appendChild(el);
@@ -1258,12 +1289,12 @@
             document.execCommand('copy');
             document.body.removeChild(el);
 
-            // Notify user with a beautiful custom magic banner alert instead of a browser alert
             const notification = document.createElement('div');
             notification.className = "fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-500 to-pink-500 text-purple-950 font-black px-6 py-3 rounded-full shadow-2xl z-50 animate-bounce flex items-center gap-2 border border-yellow-300";
             notification.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> 預言已抄錄至你的魔法剪貼簿！可直接分享給旅伴！`;
             document.body.appendChild(notification);
-            lucide.createIcons();
+            
+            if (typeof lucide !== 'undefined') lucide.createIcons();
             
             setTimeout(() => {
                 notification.classList.add('opacity-0', 'transition-opacity', 'duration-500');
@@ -1273,10 +1304,9 @@
 
         function restartTest() {
             playSound('click');
-            // Hide result, Show Intro
+            isTransitioning = false;
             document.getElementById('result-screen').classList.add('hidden');
             document.getElementById('intro-screen').classList.remove('hidden');
-            
             document.getElementById('intro-screen').scrollIntoView({ behavior: 'smooth' });
         }
     </script>

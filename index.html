@@ -528,13 +528,10 @@
         });
 
         // ------------------ HIGHLY DIVERSE MBTI QUESTION POOL (120 Questions) ------------------
-        // To strictly fulfill the <10% similarity constraint, we define 4 arrays of 30 questions.
-        // Each question explores a completely distinct narrative concept (magic academies, dragons, ancient rules, deep caves, festivals).
-        
         const questionPool = {
             EI: [
                 { id: "EI_1", dim: "EI", q: "林中空地正舉辦妖精茶會，大家熱情向你招手。你會？", a: "高興地加入她們，和大家圍成一圈唱歌、分享故事", b: "微笑點頭，選擇坐在外圍的樹根下靜靜觀察，自己喝茶" },
-                { id: "EI_2", dim: "EI", q: "遇到一位落難的神祕旅人，你會主動與他搭話嗎？", a: "熱情地走上前詢問是否需要協助，順便打聽外面的世界", b: "在遠處觀察一段時間，等他自己發出求救再慎重考慮靠近" },
+                { id: "EI_2", dim: "EI", q: "遇到一位落難的神祕旅人，你會主動與他搭話嗎？", a: "熱情地走上前詢問是否需要協助，順便打聽外面的世界", b: "在遠處觀察一段時間，等他自己發出求救再誠重考慮靠近" },
                 { id: "EI_3", dim: "EI", q: "夜幕降臨，旅店內正舉辦歡樂的篝火晚會。你會？", a: "在火堆旁大展舞技，與剛認識的旅人們暢飲通宵", b: "在二樓閣樓窗邊看著狂歡的人群，寫著自己的探險日記" },
                 { id: "EI_4", dim: "EI", q: "清晨在林間散步，你更喜歡獨自一人還是有人作伴？", a: "若能和一兩位知己一邊聊天一邊欣賞美景，那就太棒了", b: "我更愛獨自漫步，靜聽晨露滴落與內心深處的聲音" },
                 { id: "EI_5", dim: "EI", q: "遇上罕見的日食奇觀，你最想做的是？", a: "立刻呼喚村莊裡所有人出來，一起在廣場上見證奇蹟的一刻", b: "躲在秘密觀測台，用自製的魔法望遠鏡獨自進行神秘儀式" },
@@ -615,7 +612,7 @@
                 { id: "TF_16", dim: "TF", q: "你的好友犯了嚴重錯失，來向你哭訴，你會：", a: "客觀指出他的不對之處，並督促他立刻去向受害者道歉賠償", b: "先站在好友這一邊，安慰他、同情他，一起痛罵不公的規則" },
                 { id: "TF_17", dim: "TF", q: "在挑選冒險導師時，你希望導師是：", a: "博學冷靜、要求嚴格，能指出你所有法術漏洞的嚴師", b: "溫柔和藹、隨時鼓勵你，能看見你靈魂閃光點的心靈導師" },
                 { id: "TF_18", dim: "TF", q: "當你聽到一個殘酷的真相，你會：", a: "長痛不如短痛，理智接受現實，並根據事實調整行動", b: "感到極度難受，寧願相信一個美麗的謊言來維持希望" },
-                { id: "TF_19", dim: "TF", q: "如果有人稱讚你，你更希望聽到哪種讚美？", a: "「你真是我見過最聰明、做事最有效率、邏輯最嚴密的巫師」", b: "「你真是我見過最溫柔、最懂得關心他人、最善良的勇者」" },
+                { id: "TF_19", dim: "TF", q: "如果有人稱讚你，你更希望聽到哪種讚美？", a: "「你真是我見過最聰明、做事最效率、邏輯最嚴密的巫師」", b: "「你真是我見過最溫柔、最懂得關心他人、最善良的勇者」" },
                 { id: "TF_20", dim: "TF", q: "當你面對一隻迷失在人間的魔界幼龍，你的決定是：", a: "將牠送交皇家研究院鑑定，確保牠不會對人類社會造成危害", b: "送牠回魔界找媽媽，牠現在一定哭得很傷心、很想家" },
                 { id: "TF_21", dim: "TF", q: "當一個魔法專案失敗時，你首先反思的是：", a: "「哪一個邏輯環節出錯了？我的計算公式是不是不對？」", b: "「我是不是忽視了同伴的想法？大家是不是因此受傷了？」" },
                 { id: "TF_22", dim: "TF", q: "如果國王命令你設計一套「稅收法」，你的設計核心是：", a: "建立嚴密、精確的數學模型，確保國庫收入最優化與稅法公平", b: "關照貧苦農民的底層生活，減免他們的負擔，體現皇家恩澤" },
@@ -623,7 +620,7 @@
                 { id: "TF_24", dim: "TF", q: "當你跟愛人發生爭執時，你：", a: "一定要把道理說清楚，分清是非對錯，否則問題永遠存在", b: "先退讓一步安撫對方情緒，認為感情的和諧比誰對誰錯重要得多" },
                 { id: "TF_25", dim: "TF", q: "在評定魔法師等級時，你認為應該：", a: "完全看魔法考試分數與戰鬥表現等客觀指標，不徇私情", b: "考慮到每個學員的起點與個人家庭背景，給予溫暖的彈性分數" },
                 { id: "TF_26", dim: "TF", q: "如果你的隊友在戰鬥中拖了後腿，你會：", a: "在戰後會議上客觀指出他的失誤細節，討論如何改進", b: "安撫他自責的情緒，告訴他這沒什麼，大家一起承擔" },
-                { id: "TF_27", dim: "TF", q: "你如何看待童話世界中的「約定」？", a: "它是一份神聖的契約，除非不可抗力，否則必須嚴格執行", b: "它是人與人情感的橋樑，如果情況改變且不傷感情，可以彈性調整" },
+                { id: "TF_27", dim: "TF", q: "你如何看待童話世界中的「約定」？", a: "It is a sacred contract; unless force majeure occurs, it must be executed.", b: "It is a bridge of human emotion; if situations change and nobody is hurt, it can be adjusted." },
                 { id: "TF_28", dim: "TF", q: "當你看到一幅描繪「戰爭悲劇」的畫作：", a: "你開始分析戰爭爆發的底層政治、經濟與資源匱乏因果", b: "你被畫中孤兒落淚的眼神深深刺痛，沉浸在巨大的同理與哀傷中" },
                 { id: "TF_29", dim: "TF", q: "精靈大會上，一個好的提議因為得罪了長老而陷入僵局，你會：", a: "堅持真理與效率，據理力爭，認為不應為了長老面子犧牲大局", b: "尋找一個折衷的溫和說法，給足長老面子，緩解尷尬氣氛" },
                 { id: "TF_30", dim: "TF", q: "你認為一隻優秀的冒險團隊最不可或缺的是：", a: "鋼鐵般的紀律、明確的分工以及高效的執行力", b: "家庭般的溫暖、互相信任的情感紐帶以及包容心" }
@@ -661,6 +658,14 @@
                 { id: "JP_30", dim: "JP", q: "你被封為奇境守護者，你上任後的第一件事是：", a: "修訂並頒布一套全新的守護者守則，明確獎懲標準", b: "巡視四方，多聽聽百姓的聲音，不做任何死板的規章限制" }
             ]
         };
+
+        const chaptersInfo = [
+            { id: 1, title: "第一章：啟程之晨", desc: "微光穿透林冠，你來到了冒險的第一道命運交匯點..." },
+            { id: 2, title: "第二章：細語之森", desc: "古老橡樹在微風中低語，精靈與奇遇正考驗著你的抉擇..." },
+            { id: 3, title: "第三章：幻鏡之湖", desc: "澄澈純淨的湖水倒映出靈魂與實相，這需要你傾聽理智與靈性..." },
+            { id: 4, title: "第四章：雲端城堡", desc: "巍峨的空中天階與宮廷之規正在前方，考驗你對秩序或探索的熱忱..." },
+            { id: 5, title: "第五章：暮光加冕", desc: "夕陽燃燒，終章將臨，王冠下的不朽預言由你的最後一塊基石決定..." }
+        ];
 
         // ------------------ GAME ENGINE LOGIC WITH DYNAMIC SAMPLING ------------------
 
@@ -822,7 +827,7 @@
             finishJourney();
         }
 
-        // ------------------ MBTI CALCULATION ENGINE ------------------
+        // ------------------ GAME ENGINE LOGIC ------------------
 
         const mbtiArchetypes = {
             "INTJ": {
@@ -942,7 +947,7 @@
                 itemIcon: "sun",
                 talents: [
                     "<strong>心靈默契共鳴：</strong> 擁有頂級的情感凝聚力，能瞬間調和隊伍內的一切矛盾並指引方向。",
-                    "<strong>光芒魅力激勵：</strong> 天生的演說家，能用澎湃的熱情鼓舞人心，驅散一切絕望陰霾。"
+                    "<strong>光芒魅力激勵：</strong> 天生的演說家，能用澎湃的熱情鼓舞人心，驅散一切絕望陰霾。",
                 ],
                 curses: [
                     "<strong>奉獻過度的枷鎖：</strong> 常常為了滿足所有人的期望而過度壓抑自己，面具下藏著疲憊。",
@@ -982,7 +987,7 @@
                 ],
                 curses: [
                     "<strong>守舊靈魂枷鎖：</strong> 面對突如其來的魔法變革容易感到焦慮抗拒，過度依賴過往經驗。",
-                    "<strong>自我苛責重擔：</strong> 容易把所有的責任都攬在自己肩上，活得像一尊無法停下休息的石雕。"
+                    "<strong>自我痕責重擔：</strong> 容易把所有的責任都攬在自己肩上，活得像一尊無法停下休息的石雕。"
                 ],
                 match: "慶典舞者 (ESFP)",
                 svg: `<svg class="w-24 h-24 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`
@@ -1115,14 +1120,165 @@
             }
         };
 
-        const chaptersInfo = [
-            { id: 1, title: "第一章：啟程之晨", desc: "微光穿透林冠，你來到了冒險的第一道命運交匯點..." },
-            { id: 2, title: "第二章：細語之森", desc: "古老橡樹在微風中低語，精靈與奇遇正考驗著你的抉擇..." },
-            { id: 3, title: "第三章：幻鏡之湖", desc: "澄澈純淨的湖水倒映出靈魂與實相，這需要你傾聽理智與靈性..." },
-            { id: 4, title: "第四章：雲端城堡", desc: "巍峨的空中天階與宮廷之規正在前方，考驗你對秩序或探索的熱忱..." },
-            { id: 5, title: "第五章：暮光加冕", desc: "夕陽燃燒，終章將臨，王冠下的不朽預言由你的最後一塊基石決定..." }
-        ];
+        function finishJourney() {
+            // Hide Quiz, Show Calculation Loader
+            document.getElementById('quiz-screen').classList.add('hidden');
+            const loader = document.getElementById('loading-screen');
+            loader.classList.remove('hidden');
 
+            // Play win sound effect
+            playSound('win');
+
+            // Simulate magical calculation delays
+            const tips = [
+                "正在召喚精靈長老解讀幻鏡...",
+                "正在向生命之樹尋求預言...",
+                "正在調配與融合你的靈魂魔藥屬性...",
+                "命運的幻鏡結界即將打開..."
+            ];
+            
+            let tipIdx = 0;
+            const tipInterval = setInterval(() => {
+                if (tipIdx < tips.length) {
+                    document.getElementById('loading-tip').innerText = tips[tipIdx++];
+                }
+            }, 550);
+
+            setTimeout(() => {
+                clearInterval(tipInterval);
+                calculateAndShowResult();
+            }, 2400);
+        }
+
+        function calculateAndShowResult() {
+            // Calculate ratios
+            let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            let totals = { EI: 0, SN: 0, TF: 0, JP: 0 };
+
+            activeQuestions.forEach((q, idx) => {
+                const ans = answers[idx];
+                const dim = q.dim; // "EI", "SN", etc.
+                totals[dim]++;
+
+                const poleA = dim[0]; // 'E', 'S', 'T', 'J'
+                const poleB = dim[1]; // 'I', 'N', 'F', 'P'
+
+                if (ans === 'A') {
+                    scores[poleA]++;
+                } else {
+                    scores[poleB]++;
+                }
+            });
+
+            // Calculate percentages
+            const pctE = Math.round((scores.E / totals.EI) * 100);
+            const pctI = 100 - pctE;
+            
+            const pctS = Math.round((scores.S / totals.SN) * 100);
+            const pctN = 100 - pctS;
+
+            const pctT = Math.round((scores.T / totals.TF) * 100);
+            const pctF = 100 - pctT;
+
+            const pctJ = Math.round((scores.J / totals.JP) * 100);
+            const pctP = 100 - pctJ;
+
+            // Determine final personality code
+            const code = `${pctE >= 50 ? 'E':'I'}${pctS >= 50 ? 'S':'N'}${pctT >= 50 ? 'T':'F'}${pctJ >= 50 ? 'J':'P'}`;
+            
+            // Get personality profile
+            const profile = mbtiArchetypes[code] || mbtiArchetypes["INFJ"];
+
+            // Update DOM with results
+            document.getElementById('archetype-mbti').innerText = code;
+            document.getElementById('archetype-title').innerText = profile.title;
+            document.getElementById('archetype-tagline').innerText = profile.tagline;
+            document.getElementById('archetype-desc').innerText = profile.desc;
+            document.getElementById('magic-relic').innerText = profile.relic;
+            document.getElementById('guardian-beast').innerText = profile.beast;
+            document.getElementById('best-match-title').innerText = profile.match;
+            document.getElementById('archetype-graphic').innerHTML = profile.svg;
+
+            // Load icon Lucide for magic-item-icon dynamically based on character
+            const iconElement = document.getElementById('magic-item-icon');
+            iconElement.setAttribute('data-lucide', profile.itemIcon);
+
+            // Populate Strengths & Weaknesses lists
+            const talentList = document.getElementById('talent-list');
+            talentList.innerHTML = profile.talents.map(t => `<li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">✦</span><span>${t}</span></li>`).join('');
+
+            const curseList = document.getElementById('curse-list');
+            curseList.innerHTML = profile.curses.map(c => `<li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">✦</span><span>${c}</span></li>`).join('');
+
+            // Update Magic Bars
+            document.getElementById('score-e').innerText = `${pctE}%`;
+            document.getElementById('score-i').innerText = `${pctI}%`;
+            document.getElementById('bar-e').style.width = `${pctE}%`;
+            document.getElementById('bar-i').style.width = `${pctI}%`;
+
+            document.getElementById('score-s').innerText = `${pctS}%`;
+            document.getElementById('score-n').innerText = `${pctN}%`;
+            document.getElementById('bar-s').style.width = `${pctS}%`;
+            document.getElementById('bar-n').style.width = `${pctN}%`;
+
+            document.getElementById('score-t').innerText = `${pctT}%`;
+            document.getElementById('score-f').innerText = `${pctF}%`;
+            document.getElementById('bar-t').style.width = `${pctT}%`;
+            document.getElementById('bar-f').style.width = `${pctF}%`;
+
+            document.getElementById('score-j').innerText = `${pctJ}%`;
+            document.getElementById('score-p').innerText = `${pctP}%`;
+            document.getElementById('bar-j').style.width = `${pctJ}%`;
+            document.getElementById('bar-p').style.width = `${pctP}%`;
+
+            // Hide Loader, Show Results
+            document.getElementById('loading-screen').classList.add('hidden');
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.classList.remove('hidden');
+
+            // Scroll to top of result card smoothly
+            resultScreen.scrollIntoView({ behavior: 'smooth' });
+
+            // Re-render new Lucide Icons
+            lucide.createIcons();
+        }
+
+        function shareResult() {
+            playSound('select');
+            const code = document.getElementById('archetype-mbti').innerText;
+            const title = document.getElementById('archetype-title').innerText;
+            
+            const shareText = `🌲✨ 我剛在「奇幻命運森林」解鎖了我的童話靈魂職業！\n🔮 我的幻鏡診斷為：【${code} - ${title}】\n專屬魔法器具是「${document.getElementById('magic-relic').innerText}」，守護神獸是「${document.getElementById('guardian-beast').innerText}」！\n快來看看你的靈魂童話轉世是什麼吧！👉 `;
+            
+            // Traditional fallback clipboard copy helper (Safe in iframe environments)
+            const el = document.createElement('textarea');
+            el.value = shareText + window.location.href;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            // Notify user with a beautiful custom magic banner alert instead of a browser alert
+            const notification = document.createElement('div');
+            notification.className = "fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-500 to-pink-500 text-purple-950 font-black px-6 py-3 rounded-full shadow-2xl z-50 animate-bounce flex items-center gap-2 border border-yellow-300";
+            notification.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> 預言已抄錄至你的魔法剪貼簿！可直接分享給旅伴！`;
+            document.body.appendChild(notification);
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        function restartTest() {
+            playSound('click');
+            // Hide result, Show Intro
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('intro-screen').classList.remove('hidden');
+            
+            document.getElementById('intro-screen').scrollIntoView({ behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
